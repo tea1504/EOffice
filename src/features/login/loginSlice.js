@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import cookie from 'js-cookie';
 
 import login from './loginApi';
 
 const initialState = {
-  ma: 'ma',
-  password: 'password',
+  ma: '000001',
+  password: '12345',
   token: 'token',
 };
 
@@ -34,7 +35,9 @@ export const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
-        state.token = action.payload;
+        cookie.set('jwt', action.payload, {
+          expires: 1,
+        });
       });
   },
 });

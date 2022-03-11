@@ -17,6 +17,7 @@ function Login() {
   const dispatch = useDispatch();
 
   const handleFormSubmit = (e) => {
+    console.log("handleFormSubmit run ...");
     e.preventDefault();
     const form = {
       ma: ma,
@@ -26,19 +27,21 @@ function Login() {
   };
 
   const handleMaChange = (e) => {
+    console.log("handleMaChange run ...");
     const val = e.target.value;
     dispatch(changeMa(val));
   };
 
   const handlePasswordChange = (e) => {
+    console.log("handlePasswordChange run ...");
     const val = e.target.value;
     dispatch(changePassword(val));
   };
 
+  console.log("Login render");
   return (
     <>
       <div>Login</div>
-      {token}
       <Form onSubmit={handleFormSubmit}>
         <Input
           type="text"
