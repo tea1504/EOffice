@@ -1,4 +1,4 @@
-import Api from '../../apis/Api'
+import Api from '../../app/api'
 
 export default {
   login(form) {
