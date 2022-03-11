@@ -1,49 +1,26 @@
-import logo from "./logo.svg";
-import "./App.css";
-import lg from "./apis/Login";
-import dv from "./apis/DonVi";
-import { useEffect, useState } from "react";
-import cookie from 'js-cookie'
+import { Link, Route, Routes } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./pages/Home";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        // const { data: response } = await lg.login({'ma': '000001', 'matkhau': '12345'});
-        // cookie.set('jwt', response);
-
-        const { data: response } = await dv.get();
-        console.log(response);
-        setData(response);
-      } catch (error) {
-        console.error(error);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </div>
   );
 }
