@@ -4,6 +4,7 @@ import { Col, Container, Row } from "reactstrap";
 
 import Login from "./features/login/Login";
 import Home from "./features/home/Home";
+import Admin from "./features/admin/home/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 
 function App() {
@@ -15,7 +16,9 @@ function App() {
           paddingBottom: "1rem",
         }}
       >
-        <Link to="/">Home</Link> | <Link to="/login">Login</Link>
+        <Link to="/">Home</Link> | 
+        <Link to="/login">Login</Link> | 
+        <Link to="/admin">Admin</Link>
       </nav>
       <Container>
         <Row>
@@ -24,6 +27,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<Home />} />
+                <Route path="/admin" element={<Admin />}>
+
+                </Route>
                 <Route
                   path="*"
                   element={

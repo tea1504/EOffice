@@ -4,8 +4,8 @@ import cookie from 'js-cookie';
 import login from './loginApi';
 
 const initialState = {
-  ma: '000001',
-  password: '12345',
+  ma: '',
+  password: '',
   token: null,
 };
 
