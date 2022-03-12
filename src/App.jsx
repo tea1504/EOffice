@@ -6,6 +6,7 @@ import Login from "./features/login/Login";
 import Home from "./features/home/Home";
 import Admin from "./features/admin/home/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import ProtectedAdminRoutes from "./components/ProtectedAdminRoutes";
 
 function App() {
   return (
@@ -16,8 +17,7 @@ function App() {
           paddingBottom: "1rem",
         }}
       >
-        <Link to="/">Home</Link> | 
-        <Link to="/login">Login</Link> | 
+        <Link to="/">Home</Link> |<Link to="/login">Login</Link> |
         <Link to="/admin">Admin</Link>
       </nav>
       <Container>
@@ -27,8 +27,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route element={<ProtectedRoutes />}>
                 <Route path="/" element={<Home />} />
-                <Route path="/admin" element={<Admin />}>
-
+                <Route element={<ProtectedAdminRoutes />}>
+                  <Route path="/admin" element={<Admin />}></Route>
                 </Route>
                 <Route
                   path="*"

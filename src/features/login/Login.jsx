@@ -1,5 +1,7 @@
 import { Form, Input, Button } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import {
   changeMa,
@@ -9,8 +11,7 @@ import {
   selectLoginPassword,
   selectLoginToken,
 } from "./loginSlice";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { checkRoleAsync } from "../user/userSlice";
 
 function Login() {
   const ma = useSelector(selectLoginMa);
@@ -30,7 +31,11 @@ function Login() {
   };
 
   useEffect(() => {
-    if (token !== null) navigate(location.state?.from);
+    console.log(location.state?.from);
+    dispatch(checkRoleAsync());
+    if (token !== null) {
+      navigate(location.state ? location.state.from : "/");
+    }
   }, [token]);
 
   const handleMaChange = (e) => {
