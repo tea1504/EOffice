@@ -29,7 +29,6 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(checkRoleAsync.fulfilled, (state, action) => {
-        console.log(action);
         state.laadmin = action.payload.laadmin;
         state.lalanhdao = action.payload.lalanhdao;
         state.lavanthu = action.payload.lavanthu;

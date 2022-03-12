@@ -31,7 +31,6 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log(location.state?.from);
     dispatch(checkRoleAsync());
     if (token !== null) {
       navigate(location.state ? location.state.from : "/");
