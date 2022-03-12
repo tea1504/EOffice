@@ -9,15 +9,18 @@ import {
   selectLoginPassword,
   selectLoginToken,
 } from "./loginSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function Login() {
   const ma = useSelector(selectLoginMa);
   const password = useSelector(selectLoginPassword);
   const token = useSelector(selectLoginToken);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleFormSubmit = (e) => {
-    console.log("handleFormSubmit run ...");
+  const handleButtonClick = (e) => {
     e.preventDefault();
     const form = {
       ma: ma,
@@ -26,23 +29,24 @@ function Login() {
     dispatch(loginAsync(form));
   };
 
+  useEffect(() => {
+    if (token !== null) navigate(location.state?.from);
+  }, [token]);
+
   const handleMaChange = (e) => {
-    console.log("handleMaChange run ...");
     const val = e.target.value;
     dispatch(changeMa(val));
   };
 
   const handlePasswordChange = (e) => {
-    console.log("handlePasswordChange run ...");
     const val = e.target.value;
     dispatch(changePassword(val));
   };
 
-  console.log("Login render");
   return (
     <>
       <div>Login</div>
-      <Form onSubmit={handleFormSubmit}>
+      <Form>
         <Input
           type="text"
           value={ma}
@@ -59,7 +63,9 @@ function Login() {
           name="password"
           id="password"
         />
-        <Button color="info">Đăng nhập</Button>
+        <Button color="info" onClick={handleButtonClick}>
+          Đăng nhập
+        </Button>
       </Form>
     </>
   );

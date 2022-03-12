@@ -6,7 +6,7 @@ import login from './loginApi';
 const initialState = {
   ma: '000001',
   password: '12345',
-  token: 'token',
+  token: null,
 };
 
 export const loginAsync = createAsyncThunk(
@@ -38,6 +38,7 @@ export const loginSlice = createSlice({
         cookie.set('jwt', action.payload, {
           expires: 1,
         });
+        state.token = action.payload;
       });
   },
 });
