@@ -10,34 +10,27 @@ import ProtectedAdminRoutes from "./components/ProtectedAdminRoutes";
 import Logout from "./features/login/Logout";
 
 function App() {
-
   return (
     <>
-      <Container>
-        <Row>
-          <Col className="col-md-12">
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<Logout />} />
-              <Route element={<ProtectedRoutes />}>
-                <Route path="/" element={<Home />}>
-                  <Route element={<ProtectedAdminRoutes />}>
-                    <Route path="admin" element={<Admin />}></Route>
-                  </Route>
-                </Route>
-                <Route
-                  path="*"
-                  element={
-                    <main style={{ padding: "1rem" }}>
-                      <p>There's nothing here!</p>
-                    </main>
-                  }
-                />
-              </Route>
-            </Routes>
-          </Col>
-        </Row>
-      </Container>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/" element={<Home />}>
+            <Route element={<ProtectedAdminRoutes />}>
+              <Route path="admin" element={<Admin />}></Route>
+            </Route>
+          </Route>
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Route>
+      </Routes>
     </>
   );
 }

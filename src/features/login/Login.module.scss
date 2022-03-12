@@ -1,0 +1,56 @@
+$gray: #0005;
+$buttonColor: #817b73;
+
+.background {
+  background-image: linear-gradient($gray, $gray), url('../../../public/bg_login.jpg');
+  width: 100wh;
+  height: 100vh;
+}
+
+.img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.section {
+  padding: 7em;
+}
+
+.headingSection {
+  font-size: 28px;
+  color: white;
+}
+
+.loginWrap {
+  position: relative;
+  color: rgba(255, 255, 255, .9);
+}
+
+.input {
+  padding: 15px;
+  background-color: #fff5;
+  border: 1px solid #cccc;
+  border-radius: 50px;
+  font-weight: 600;
+
+  &::placeholder {
+    color: white;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: #0000;
+    border: 1px solid #fff;
+    box-shadow: none;
+    color: white;
+  }
+}
+
+.button {
+  padding: 15px;
+  border: none;
+  border-radius: 50px;
+  background-color: $buttonColor;
+  font-size: 20px;
+}
