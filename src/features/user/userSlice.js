@@ -24,7 +24,11 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-
+    resetRole: (state, action) => {
+      state.laadmin = false;
+      state.lalanhdao = false;
+      state.lavanthu = false;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -40,6 +44,6 @@ export const selectUserAdmin = state => state.user.laadmin;
 export const selectUserLanhDao = state => state.user.lalanhdao;
 export const selectUserVanThu = state => state.user.lavanthu;
 
-export const { } = userSlice.actions;
+export const { resetRole } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -44,8 +44,8 @@ function Login() {
   };
 
   useEffect(() => {
-    dispatch(checkRoleAsync());
     if (token) {
+      dispatch(checkRoleAsync());
       navigate(location.state ? location.state.from : "/");
     }
   }, [token]);
