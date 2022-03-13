@@ -2,20 +2,21 @@ import {
   Form,
   Input,
   Button,
-  Container,
-  Row,
-  Col,
   FormGroup,
+  FormFeedback,
 } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 import {
   changeMa,
   changePassword,
   loginAsync,
+  selectLoginError,
   selectLoginMa,
   selectLoginPassword,
   selectLoginToken,
@@ -27,6 +28,8 @@ function Login() {
   const ma = useSelector(selectLoginMa);
   const password = useSelector(selectLoginPassword);
   const token = useSelector(selectLoginToken);
+  const err = useSelector(selectLoginError);
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,7 +45,6 @@ function Login() {
 
   useEffect(() => {
     dispatch(checkRoleAsync());
-    console.log(token);
     if (token) {
       navigate(location.state ? location.state.from : "/");
     }
@@ -59,54 +61,78 @@ function Login() {
   };
 
   return (
-    <div className={clsx(style.background, style.img)}>
-      <section className={style.section}>
-        <Container>
-          <Row className="justify-content-center">
-            <Col className="col-md-6 text-center mb-5">
-              <div className={style.headingSection}>Hệ thống quản lý công văn</div>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col className="col-md-6 col-lg-4">
-              <div className={clsx("p-0", style.loginWrap)}>
-                <h3 className="mb-4 text-center">Đăng nhập</h3>
-                <Form>
-                  <FormGroup>
-                    <Input
-                      type="text"
-                      value={ma}
-                      placeholder="Mã cán bộ..."
-                      onChange={handleMaChange}
-                      name="ma"
-                      id="ma"
-                      className={style.input}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Input
-                      type="password"
-                      value={password}
-                      placeholder="Mật khẩu..."
-                      onChange={handlePasswordChange}
-                      name="password"
-                      id="password"
-                      className={style.input}
-                    />
-                  </FormGroup>
-
-                  <Button
-                    className={clsx("form-control", style.button)}
-                    onClick={handleButtonClick}
-                  >
-                    Đăng nhập
-                  </Button>
-                </Form>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+    <div className={style.containerLogin100}>
+      <div className={style.wrapLogin100}>
+        <span className={clsx(style.login100FormTitle, style.pb41)}>
+          Đăng nhập hệ thống
+        </span>
+        <Form
+          className={clsx(
+            style.login100Form,
+            style.validateForm,
+            style.pb33,
+            style.pt5
+          )}
+        >
+          <FormGroup className={clsx(style.wrapInput100, style.validateInput, style.inputMa)}>
+            <Input
+              type="text"
+              value={ma}
+              placeholder="Mã cán bộ..."
+              onChange={handleMaChange}
+              name="ma"
+              id="ma"
+              className={style.input100}
+              invalid={!!err}
+            />
+            <FormFeedback className={style.formFeedback}>
+              {err?.data}
+            </FormFeedback>
+          </FormGroup>
+          <FormGroup
+            className={clsx(
+              style.wrapInput100,
+              style.validateInput,
+              style.inputPassword
+            )}
+          >
+            <Input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              placeholder="Mật khẩu..."
+              onChange={handlePasswordChange}
+              name="password"
+              id="password"
+              className={style.input100}
+            />
+            {showPassword ? (
+              <FontAwesomeIcon
+                icon={faEyeSlash}
+                className={style.iconEye}
+                onClick={() => setShowPassword(false)}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faEye}
+                className={style.iconEye}
+                onClick={() => setShowPassword(true)}
+              />
+            )}
+          </FormGroup>
+          <FormGroup
+            className={clsx(
+              style.containerLogin100FormBtn
+            )}
+          >
+            <Button
+              className={clsx(style.login100FormBtn)}
+              onClick={handleButtonClick}
+            >
+              Đăng nhập
+            </Button>
+          </FormGroup>
+        </Form>
+      </div>
     </div>
   );
 }

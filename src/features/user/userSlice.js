@@ -15,7 +15,7 @@ export const checkRoleAsync = createAsyncThunk(
       const response = await user.role();
       return response.data;
     } catch (err) {
-      console.log(err);
+      console.log(err.response);
     }
   }
 );

@@ -7,6 +7,7 @@ const initialState = {
   ma: '',
   password: '',
   token: null,
+  err: null,
 };
 
 export const loginAsync = createAsyncThunk(
@@ -15,8 +16,8 @@ export const loginAsync = createAsyncThunk(
     try {
       const response = await login.login(form);
       return response.data;
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      return error.response;
     }
   }
 );
@@ -39,10 +40,16 @@ export const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
-        cookie.set('jwt', action.payload, {
-          expires: 1,
-        });
-        state.token = action.payload;
+        const status = action.payload.status;
+        if (status) {
+          state.err = action.payload;
+        }
+        else {
+          cookie.set('jwt', action.payload, {
+            expires: 1,
+          });
+          state.token = action.payload
+        }
       });
   },
 });
@@ -50,6 +57,7 @@ export const loginSlice = createSlice({
 export const selectLoginMa = state => state.login.ma;
 export const selectLoginPassword = state => state.login.password;
 export const selectLoginToken = state => state.login.token;
+export const selectLoginError = state => state.login.err;
 
 export const { changeMa, changePassword, removeToken } = loginSlice.actions;
 
