@@ -7,7 +7,8 @@ import Admin from "./features/admin/home/Home";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProtectedAdminRoutes from "./components/ProtectedAdminRoutes";
 import Logout from "./features/login/Logout";
-import Page404 from "./components/Page404";
+import Page404 from "./pages/Page404";
+import './App.css'
 
 function App() {
   return (

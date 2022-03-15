@@ -1,9 +1,20 @@
 import { Outlet } from "react-router-dom";
+import { MyFooter } from "../../pages/layouts/MyFooter";
+import { MyHeader } from "../../pages/layouts/MyHeader";
+import { MySidebar } from "../../pages/layouts/MySidebar";
 
 function Home() {
   return (
     <>
-      <Outlet />
+      <MySidebar />
+      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+        <MyHeader />
+        <div className="content">
+          alo
+          <Outlet />
+        </div>
+        <MyFooter />
+      </div>
     </>
   );
 }
