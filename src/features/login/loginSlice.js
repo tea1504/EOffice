@@ -35,6 +35,9 @@ export const loginSlice = createSlice({
     removeToken: (state, action) => {
       state.token = null;
       cookie.remove('jwt');
+    },
+    setToken: (state, action) => {
+      state.token = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -56,9 +59,13 @@ export const loginSlice = createSlice({
 
 export const selectLoginMa = state => state.login.ma;
 export const selectLoginPassword = state => state.login.password;
-export const selectLoginToken = state => state.login.token;
+export const selectLoginToken = state => {
+  if (cookie.get("jwt"))
+    return cookie.get("jwt");
+  return state.login.token
+};
 export const selectLoginError = state => state.login.err;
 
-export const { changeMa, changePassword, removeToken } = loginSlice.actions;
+export const { changeMa, changePassword, removeToken, setToken } = loginSlice.actions;
 
 export default loginSlice.reducer;
