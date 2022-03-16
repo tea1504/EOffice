@@ -202,15 +202,15 @@
   background-size: cover;
 }
 
-::-webkit-scrollbar {
+.sidebar ::-webkit-scrollbar {
   width: 6px;
   background-color: #F5F5F5;
 }
 
-::-webkit-scrollbar-thumb {
+.sidebar ::-webkit-scrollbar-thumb {
   background-color: #000000;
 }
 
-::-webkit-scrollbar-track {
-  background-color: #F5F5F5;
+.sidebar ::-webkit-scrollbar-track {
+  background-color: #3c4b64;
 }

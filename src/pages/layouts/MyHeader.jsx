@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button, Container } from "reactstrap";
+import { selectSidebar, toggleSidebar } from "../../features/common/commonSlide";
 import {
   changeMa,
   changePassword,
@@ -19,6 +20,7 @@ let activeStyle = {
 
 export const MyHeader = () => {
   const token = useSelector(selectLoginToken);
+  const sidebar = useSelector(selectSidebar);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,10 +34,15 @@ export const MyHeader = () => {
   useEffect(() => {
     if (token === null) navigate("/login");
   }, [token]);
+
+  const handleButtonToggleSidebar = () => {
+    dispatch(toggleSidebar(!sidebar));
+  };
+
   return (
     <div className="header">
       <Container fluid style={{ display: "flex" }}>
-        <Button className="header-toggler px-0">
+        <Button className="header-toggler px-0" onClick={handleButtonToggleSidebar}>
           <FontAwesomeIcon icon={faBars} />
         </Button>
         <ul className="header-nav d-none d-md-flex">

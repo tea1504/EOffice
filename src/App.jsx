@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import cookie from "js-cookie";
 
 import Login from "./features/login/Login";
 import Home from "./features/home/Home";
@@ -9,8 +10,22 @@ import ProtectedAdminRoutes from "./components/ProtectedAdminRoutes";
 import Logout from "./features/login/Logout";
 import Page404 from "./pages/Page404";
 import './App.css'
+import { useDispatch } from "react-redux";
+import { checkRoleAsync } from "./features/user/userSlice";
+import { setToken } from "./features/login/loginSlice";
+import { useEffect } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = cookie.get('jwt');
+    if (token) {
+      dispatch(checkRoleAsync());
+      dispatch(setToken(token));
+    }
+  }, []);
+
   return (
     <>
       <Routes>

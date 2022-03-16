@@ -1,13 +1,22 @@
+import clsx from "clsx";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { MyFooter } from "../../pages/layouts/MyFooter";
 import { MyHeader } from "../../pages/layouts/MyHeader";
 import { MySidebar } from "../../pages/layouts/MySidebar";
+import { selectSidebar } from "../common/commonSlide";
 
 function Home() {
+  const sidebar = useSelector(selectSidebar);
+
   return (
     <>
-      <MySidebar />
-      <div className="wrapper d-flex flex-column min-vh-100 bg-light">
+      {sidebar && <MySidebar />}
+      <div
+        className={clsx("d-flex flex-column min-vh-100 bg-light", {
+          wrapper: sidebar,
+        })}
+      >
         <MyHeader />
         <div className="content">
           <Outlet />
