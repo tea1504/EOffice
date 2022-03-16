@@ -10,7 +10,6 @@ function Home() {
       <div className="wrapper d-flex flex-column min-vh-100 bg-light">
         <MyHeader />
         <div className="content">
-          alo
           <Outlet />
         </div>
         <MyFooter />

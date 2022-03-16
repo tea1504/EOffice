@@ -7,7 +7,7 @@ const ProtectedAdminRoute = () => {
   const admin = useSelector(selectUserAdmin);
   const location = useLocation();
 
-  return admin||true ? (
+  return admin ? (
     <Outlet />
   ) : (
     <Navigate to="/" replace state={{ from: location }} />

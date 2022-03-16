@@ -50,9 +50,9 @@ function Login() {
     dispatch(loginAsync(form));
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (token) {
-      dispatch(checkRoleAsync());
+      await dispatch(checkRoleAsync());
       navigate(location.state ? location.state.from : "/");
     }
   }, [token]);

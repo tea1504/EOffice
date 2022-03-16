@@ -6,6 +6,7 @@ const initialState = {
   laadmin: false,
   lalanhdao: false,
   lavanthu: false,
+  err: null,
 };
 
 export const checkRoleAsync = createAsyncThunk(
@@ -15,7 +16,7 @@ export const checkRoleAsync = createAsyncThunk(
       const response = await user.role();
       return response.data;
     } catch (err) {
-      console.log(err.response);
+      return err.response;
     }
   }
 );
@@ -33,9 +34,15 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(checkRoleAsync.fulfilled, (state, action) => {
-        state.laadmin = action.payload?.laadmin;
-        state.lalanhdao = action.payload?.lalanhdao;
-        state.lavanthu = action.payload?.lavanthu;
+        const status = action.payload.status;
+        if (status) {
+          state.err = action.payload;
+        }
+        else {
+          state.laadmin = action.payload?.laadmin;
+          state.lalanhdao = action.payload?.lalanhdao;
+          state.lavanthu = action.payload?.lavanthu;
+        }
       });
   },
 });

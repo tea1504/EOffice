@@ -1,9 +1,37 @@
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button, Container } from "reactstrap";
-import img from '../../logo192.png'
+import {
+  changeMa,
+  changePassword,
+  removeToken,
+  selectLoginToken,
+} from "../../features/login/loginSlice";
+import { resetRole } from "../../features/user/userSlice";
+import img from "../../logo192.png";
+
+let activeStyle = {
+  textDecoration: "underline",
+};
 
 export const MyHeader = () => {
+  const token = useSelector(selectLoginToken);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleClickLogout = () => {
+    dispatch(changeMa(""));
+    dispatch(changePassword(""));
+    dispatch(resetRole());
+    dispatch(removeToken());
+  };
+
+  useEffect(() => {
+    if (token === null) navigate("/login");
+  }, [token]);
   return (
     <div className="header">
       <Container fluid style={{ display: "flex" }}>
@@ -12,9 +40,13 @@ export const MyHeader = () => {
         </Button>
         <ul className="header-nav d-none d-md-flex">
           <li className="nav-item">
-            <a className="nav-link" href="#">
+            <NavLink
+              to="/admin"
+              className="nav-link"
+              style={({ isActive }) => (isActive ? activeStyle : undefined)}
+            >
               Dashboard
-            </a>
+            </NavLink>
           </li>
           <li className="nav-item">
             <a className="nav-link" href="#">
@@ -38,10 +70,14 @@ export const MyHeader = () => {
               <FontAwesomeIcon icon={faBars} />
             </a>
           </li>
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <FontAwesomeIcon icon={faBars} />
-            </a>
+          <li className="nav-item" id="TooltipExample">
+            <div
+              className="nav-link"
+              style={{ cursor: "pointer" }}
+              onClick={handleClickLogout}
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+            </div>
           </li>
         </ul>
         <ul className="header-nav ms-3">
