@@ -9,17 +9,18 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import ProtectedAdminRoutes from "./components/ProtectedAdminRoutes";
 import Logout from "./features/login/Logout";
 import Page404 from "./pages/Page404";
-import './App.css'
+import "./App.css";
 import { useDispatch } from "react-redux";
 import { checkRoleAsync } from "./features/user/userSlice";
 import { setToken } from "./features/login/loginSlice";
 import { useEffect } from "react";
+import { LoaiCongVan } from "./features/admin/loaicongvan/LoaiCongVan";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const token = cookie.get('jwt');
+    const token = cookie.get("jwt");
     if (token) {
       dispatch(checkRoleAsync());
       dispatch(setToken(token));
@@ -34,7 +35,12 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/" element={<Home />}>
             <Route element={<ProtectedAdminRoutes />}>
-              <Route path="admin" element={<Admin />}></Route>
+              <Route path="admin">
+                <Route path="" element={<Admin />} />
+                <Route path="loaicongvan">
+                  <Route path="" element={<LoaiCongVan />} />
+                </Route>
+              </Route>
             </Route>
           </Route>
           <Route path="*" element={<Page404 />} />

@@ -214,3 +214,16 @@
 .sidebar ::-webkit-scrollbar-track {
   background-color: #3c4b64;
 }
+
+.btn-neutral {
+  background-color: #fff;
+  border-color: #e7eaf0;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 8%);
+  color: #16192c;
+}
+
+.btn-neutral:hover {
+  background-color: #e7eaf0;
+  border-color: #e7eaf0;
+  color: #16192c;
+}

@@ -4,14 +4,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button, Container } from "reactstrap";
-import { selectSidebar, toggleSidebar } from "../../features/common/commonSlide";
+import {
+  selectSidebar,
+  toggleSidebar,
+} from "../../features/common/commonSlide";
 import {
   changeMa,
   changePassword,
   removeToken,
   selectLoginToken,
 } from "../../features/login/loginSlice";
-import { resetRole } from "../../features/user/userSlice";
+import { resetRole, selectUserAdmin } from "../../features/user/userSlice";
 import img from "../../logo192.png";
 
 let activeStyle = {
@@ -21,6 +24,7 @@ let activeStyle = {
 export const MyHeader = () => {
   const token = useSelector(selectLoginToken);
   const sidebar = useSelector(selectSidebar);
+  const admin = useSelector(selectUserAdmin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,19 +46,24 @@ export const MyHeader = () => {
   return (
     <div className="header">
       <Container fluid style={{ display: "flex" }}>
-        <Button className="header-toggler px-0" onClick={handleButtonToggleSidebar}>
+        <Button
+          className="header-toggler px-0"
+          onClick={handleButtonToggleSidebar}
+        >
           <FontAwesomeIcon icon={faBars} />
         </Button>
         <ul className="header-nav d-none d-md-flex">
-          <li className="nav-item">
-            <NavLink
-              to="/admin"
-              className="nav-link"
-              style={({ isActive }) => (isActive ? activeStyle : undefined)}
-            >
-              Dashboard
-            </NavLink>
-          </li>
+          {admin && (
+            <li className="nav-item">
+              <NavLink
+                to="/admin"
+                className="nav-link"
+                style={({ isActive }) => (isActive ? activeStyle : undefined)}
+              >
+                Dashboard
+              </NavLink>
+            </li>
+          )}
           <li className="nav-item">
             <a className="nav-link" href="#">
               Users

@@ -1,8 +1,13 @@
-import { faDashboard } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faDashboard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { selectUserAdmin } from "../../features/user/userSlice";
 
 export const MySidebar = () => {
+  const admin = useSelector(selectUserAdmin);
+
   return (
     <div className="sidebar">
       <div className="sidebar-brand d-none d-md-flex">alo</div>
@@ -12,205 +17,28 @@ export const MySidebar = () => {
             <div className="simplebar-offset">
               <div className="simplebar-content-wrapper">
                 <div className="simplebar-content">
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                      <span className="badge badge-sm bg-info ms-auto">NEW</span>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a className="nav-link" href="index.html">
-                      <FontAwesomeIcon className="nav-icon" icon={faDashboard} />
-                      Dashboard
-                    </a>
-                  </li>
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/admin">
+                        <FontAwesomeIcon
+                          className="nav-icon"
+                          icon={faDashboard}
+                        />
+                        Dashboard
+                      </NavLink>
+                    </li>
+                  )}
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/admin/loaicongvan">
+                        <FontAwesomeIcon
+                          className="nav-icon"
+                          icon={faBook}
+                        />
+                        Loại công văn
+                      </NavLink>
+                    </li>
+                  )}
                 </div>
               </div>
             </div>

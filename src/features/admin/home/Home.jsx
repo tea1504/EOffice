@@ -1,68 +1,15 @@
 import React from 'react'
+import { Col, Container, Row } from 'reactstrap'
 
 const Home = () => {
   return (
-    <div>
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-      Home Admin <br />
-    </div>
+    <Container fluid>
+      <Row>
+        <Col>
+          Trang chủ admin
+        </Col>
+      </Row>
+    </Container>
   )
 }
 
