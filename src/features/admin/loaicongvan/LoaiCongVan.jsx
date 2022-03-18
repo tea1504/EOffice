@@ -1,47 +1,135 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Card, CardBody, Col, Container, Row, Table } from "reactstrap";
-import { LoaiCongVanRow } from "./LoaiCongVanRow";
-import { getDataAsync, selectLCVData } from "./loaiCongVanSlice";
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  Col,
+  Container,
+  Input,
+  InputGroup,
+  InputGroupText,
+  Row,
+  Table,
+  Tooltip,
+} from "reactstrap";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import DataTable from "react-data-table-component";
+
+import { getDataAsync, selectLCVData, selectLCVErr } from "./loaiCongVanSlice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleXmark,
+  faEdit,
+  faMagnifyingGlass,
+  faPlus,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { customStyles, paginationConfig } from "../../../app/datatableConfig";
+
+const ActionButton = () => {
+  return (
+    <>
+      <Button className="btn-neutral mx-1" id="btnEdit">
+        <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
+      </Button>
+      <Button className="btn-neutral mx-1" id="btnDelete">
+        <FontAwesomeIcon icon={faTrash} className="text-danger" /> Xóa
+      </Button>
+    </>
+  );
+};
 
 export const LoaiCongVan = () => {
+  const MySwal = withReactContent(Swal);
+  const columns = [
+    {
+      name: "Tên loại văn bản",
+      selector: (row) => row.ten,
+      sortable: true,
+    },
+    {
+      name: "Tên viết tắt",
+      selector: (row) => row.viettat,
+      sortable: true,
+    },
+    {
+      cell: (row) => <ActionButton />,
+      center: true,
+      maxWidth: "300px",
+    },
+  ];
   const data = useSelector(selectLCVData);
+  const err = useSelector(selectLCVErr);
   const dispatch = useDispatch();
+  const [filterText, setFilterText] = useState("");
+  const filterItem = data.filter((item) =>
+    item.ten.toLowerCase().includes(filterText.toLowerCase())
+  );
 
   useEffect(() => {
     dispatch(getDataAsync());
   }, []);
 
+  useEffect(() => {
+    if (err)
+      MySwal.fire({
+        title: <h1>Error {err.status}</h1>,
+        text: err.data,
+        icon: "error",
+        footer: "EOffice &copy; 2022",
+      });
+  }, [err]);
+
+  const handleClear = () => {
+    if (filterText) {
+      setFilterText("");
+    }
+  };
+
   return (
     <Container fluid className="my-3 px-5">
-      <Row>
+      <Row className="mb-3">
         <Col md={12} className="mb-2">
           <h2>Loại công văn</h2>
         </Col>
-        <Col md={12}>
-          <Card>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Tên loại công văn</th>
-                  <th>Tên viết tắt</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((el, ind) => {
-                  return (
-                    <LoaiCongVanRow
-                      key={ind}
-                      ten={el.ten}
-                      viettat={el.viettat}
-                    />
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Card>
+        <Col md={6}>
+          <InputGroup>
+            <Input
+              placeholder="Tìm kiếm ..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            <InputGroupText onClick={handleClear}>
+              <FontAwesomeIcon icon={faXmark} />
+            </InputGroupText>
+          </InputGroup>
         </Col>
+        <Col md={6} className="text-end">
+          <Button className="btn-neutral">
+            <FontAwesomeIcon icon={faPlus} /> Thêm mới
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        {!err && (
+          <Col md={12}>
+            <Card>
+              <DataTable
+                pagination
+                paginationComponentOptions={paginationConfig}
+                fixedHeader
+                fixedHeaderScrollHeight="70vh"
+                highlightOnHover
+                customStyles={customStyles}
+                columns={columns}
+                data={filterItem}
+              />
+            </Card>
+          </Col>
+        )}
       </Row>
     </Container>
   );
