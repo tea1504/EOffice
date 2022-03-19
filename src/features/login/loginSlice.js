@@ -49,7 +49,7 @@ export const loginSlice = createSlice({
         }
         else {
           cookie.set('jwt', action.payload, {
-            expires: 1,
+            expires: new Date(new Date().getTime() + 2 * 60 * 60 * 1000),
           });
           state.token = action.payload
         }
@@ -62,7 +62,7 @@ export const selectLoginPassword = state => state.login.password;
 export const selectLoginToken = state => {
   if (cookie.get("jwt"))
     return cookie.get("jwt");
-  return state.login.token
+  return null;
 };
 export const selectLoginError = state => state.login.err;
 

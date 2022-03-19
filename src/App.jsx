@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import cookie from "js-cookie";
 
@@ -16,16 +16,16 @@ import { setToken } from "./features/login/loginSlice";
 import { useEffect } from "react";
 import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
 
-
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = cookie.get("jwt");
     if (token) {
       dispatch(checkRoleAsync());
       dispatch(setToken(token));
-    }
+    } else navigate("/login");
   }, []);
 
   return (
