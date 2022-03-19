@@ -1,17 +1,18 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
-  ButtonGroup,
   Card,
   Col,
   Container,
   Input,
   InputGroup,
   InputGroupText,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   Row,
-  Table,
-  Tooltip,
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -20,14 +21,14 @@ import DataTable from "react-data-table-component";
 import { getDataAsync, selectLCVData, selectLCVErr } from "./loaiCongVanSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCircleXmark,
   faEdit,
-  faMagnifyingGlass,
   faPlus,
+  faPlusSquare,
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { customStyles, paginationConfig } from "../../../app/datatableConfig";
+import { LoaiCongVanCreat } from "./LoaiCongVanCreat";
 
 const ActionButton = () => {
   return (
@@ -44,6 +45,7 @@ const ActionButton = () => {
 
 export const LoaiCongVan = () => {
   const MySwal = withReactContent(Swal);
+  const [modalAdd, setModalAdd] = useState(false);
   const columns = [
     {
       name: "Tên loại văn bản",
@@ -89,6 +91,10 @@ export const LoaiCongVan = () => {
     }
   };
 
+  const handleAddButtonClick = () => {
+    setModalAdd(!modalAdd);
+  }
+
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
@@ -108,7 +114,10 @@ export const LoaiCongVan = () => {
           </InputGroup>
         </Col>
         <Col md={6} className="text-end">
-          <Button className="btn-neutral">
+          <Button
+            className="btn-neutral"
+            onClick={handleAddButtonClick}
+          >
             <FontAwesomeIcon icon={faPlus} /> Thêm mới
           </Button>
         </Col>
@@ -131,6 +140,15 @@ export const LoaiCongVan = () => {
           </Col>
         )}
       </Row>
+      <Modal isOpen={modalAdd} size="xl">
+        <ModalHeader toggle={() => setModalAdd(!modalAdd)}>
+          <FontAwesomeIcon icon={faPlusSquare} className="mx-2" />
+          Thêm loại công văn mới
+        </ModalHeader>
+        <ModalBody>
+          <LoaiCongVanCreat />
+        </ModalBody>
+      </Modal>
     </Container>
   );
 };
