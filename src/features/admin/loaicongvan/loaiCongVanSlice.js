@@ -8,6 +8,7 @@ const initialState = {
     viettat: '',
     errTen: null,
     errVT: null,
+    isSubmitted: false,
   },
   err: null,
 };
@@ -51,6 +52,7 @@ export const loaiCongVanSlice = createSlice({
       state.form.viettat = "";
       state.form.errTen = null;
       state.form.errVT = null;
+      state.form.isSubmitted = false;
     }
   },
   extraReducers: (builder) => {
@@ -77,6 +79,8 @@ export const loaiCongVanSlice = createSlice({
             }
           }
         }
+        else
+          state.form.isSubmitted = true;
       })
   }
 });

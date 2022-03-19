@@ -35,13 +35,6 @@ function LoaiCongVanCreate() {
     e.preventDefault();
     dispatch(createDataAsync(form));
     dispatch(getDataAsync());
-    // if (!form.errTen && !form.errVT)
-    //   MySwal.fire({
-    //     title: <h1>OK</h1>,
-    //     text: "Lưu thành công",
-    //     icon: "info",
-    //     footer: "EOffice &copy; 2022",
-    //   });
   };
 
   useEffect(() => {
@@ -52,6 +45,18 @@ function LoaiCongVanCreate() {
     dispatch(onChangeTen(""));
     dispatch(onChangeViettat(""));
   }, [data.length]);
+
+  useEffect(() => {
+    if (form.isSubmitted)
+      MySwal.fire({
+        title: <h1>OK</h1>,
+        text: "Lưu thành công",
+        icon: "info",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(resetForm());
+      });
+  }, [form.isSubmitted]);
 
   return (
     <div>
