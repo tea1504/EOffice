@@ -10,7 +10,6 @@ import {
   InputGroupText,
   Modal,
   ModalBody,
-  ModalFooter,
   ModalHeader,
   Row,
 } from "reactstrap";
@@ -28,7 +27,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { customStyles, paginationConfig } from "../../../app/datatableConfig";
-import { LoaiCongVanCreat } from "./LoaiCongVanCreat";
+import LoaiCongVanCreate from "./LoaiCongVanCreate";
 
 const ActionButton = () => {
   return (
@@ -43,7 +42,7 @@ const ActionButton = () => {
   );
 };
 
-export const LoaiCongVan = () => {
+function LoaiCongVan(){
   const MySwal = withReactContent(Swal);
   const [modalAdd, setModalAdd] = useState(false);
   const columns = [
@@ -105,6 +104,7 @@ export const LoaiCongVan = () => {
           <InputGroup>
             <Input
               placeholder="Tìm kiếm ..."
+              className="input-custom"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
@@ -146,9 +146,11 @@ export const LoaiCongVan = () => {
           Thêm loại công văn mới
         </ModalHeader>
         <ModalBody>
-          <LoaiCongVanCreat />
+          <LoaiCongVanCreate />
         </ModalBody>
       </Modal>
     </Container>
   );
 };
+
+export default LoaiCongVan;

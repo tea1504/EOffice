@@ -14,7 +14,8 @@ import { useDispatch } from "react-redux";
 import { checkRoleAsync } from "./features/user/userSlice";
 import { setToken } from "./features/login/loginSlice";
 import { useEffect } from "react";
-import { LoaiCongVan } from "./features/admin/loaicongvan/LoaiCongVan";
+import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
+
 
 function App() {
   const dispatch = useDispatch();
