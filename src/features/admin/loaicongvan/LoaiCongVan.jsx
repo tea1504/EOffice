@@ -74,7 +74,10 @@ const ActionButton = ({ data, handleEditButtonClick }) => {
   };
   return (
     <>
-      <Button className="btn-neutral mx-1" onClick={() => handleEditButtonClick(data)}>
+      <Button
+        className="btn-neutral mx-1"
+        onClick={() => handleEditButtonClick(data)}
+      >
         <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
       </Button>
       <Button className="btn-neutral mx-1" onClick={handleDeleteButtonClick}>
@@ -88,6 +91,12 @@ function LoaiCongVan() {
   const MySwal = withReactContent(Swal);
   const [modalAdd, setModalAdd] = useState(false);
   const columns = [
+    {
+      name: "#",
+      selector: (row, index) => index + 1,
+      maxWidth: '100px',
+      right: true,
+    },
     {
       name: "Tên loại văn bản",
       selector: (row) => row.ten,
@@ -114,8 +123,10 @@ function LoaiCongVan() {
   const edit = useSelector(selectLCVEdit);
   const dispatch = useDispatch();
   const [filterText, setFilterText] = useState("");
-  const filterItem = data.filter((item) =>
-    item.ten.toLowerCase().includes(filterText.toLowerCase())
+  const filterItem = data.filter(
+    (item) =>
+      item.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.viettat.toLowerCase().includes(filterText.toLowerCase())
   );
 
   useEffect(() => {
@@ -182,7 +193,7 @@ function LoaiCongVan() {
                 pagination
                 paginationComponentOptions={paginationConfig}
                 fixedHeader
-                fixedHeaderScrollHeight="70vh"
+                fixedHeaderScrollHeight="65vh"
                 highlightOnHover
                 customStyles={customStyles}
                 columns={columns}

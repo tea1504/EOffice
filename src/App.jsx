@@ -15,6 +15,7 @@ import { checkRoleAsync } from "./features/user/userSlice";
 import { setToken } from "./features/login/loginSlice";
 import { useEffect } from "react";
 import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
+import DoKhan from "./features/admin/dokhan/DoKhan";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,9 @@ function App() {
                 <Route path="" element={<Admin />} />
                 <Route path="loaicongvan">
                   <Route path="" element={<LoaiCongVan />} />
+                </Route>
+                <Route path="dokhan">
+                  <Route path="" element={<DoKhan />} />
                 </Route>
               </Route>
             </Route>

@@ -1,4 +1,4 @@
-import { faBook, faDashboard } from "@fortawesome/free-solid-svg-icons";
+import { faBook, faDashboard, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
@@ -36,6 +36,17 @@ export const MySidebar = () => {
                           icon={faBook}
                         />
                         Loại công văn
+                      </NavLink>
+                    </li>
+                  )}
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/admin/dokhan">
+                        <FontAwesomeIcon
+                          className="nav-icon"
+                          icon={faPersonRunning}
+                        />
+                        Độ khẩn
                       </NavLink>
                     </li>
                   )}
