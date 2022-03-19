@@ -67,8 +67,6 @@ function Login() {
     dispatch(changePassword(val));
   };
 
-  // console.log(err.data);
-
   return (
     <div
       className={clsx(

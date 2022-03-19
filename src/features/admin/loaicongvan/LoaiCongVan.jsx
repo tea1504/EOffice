@@ -17,10 +17,21 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import DataTable from "react-data-table-component";
 
-import { getDataAsync, selectLCVData, selectLCVErr } from "./loaiCongVanSlice";
+import {
+  deleteDataAsync,
+  getDataAsync,
+  resetError,
+  setIsEdit,
+  selectLCV,
+  selectLCVData,
+  selectLCVEdit,
+  selectLCVErr,
+  setForm,
+} from "./loaiCongVanSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
+  faPencilSquare,
   faPlus,
   faPlusSquare,
   faTrash,
@@ -28,21 +39,52 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { customStyles, paginationConfig } from "../../../app/datatableConfig";
 import LoaiCongVanCreate from "./LoaiCongVanCreate";
+import LoaiCongVanEdit from "./LoaiCongVanEdit";
 
-const ActionButton = () => {
+const ActionButton = ({ data, handleEditButtonClick }) => {
+  const deletedLCV = useSelector(selectLCV);
+  const dispatch = useDispatch();
+  const MySwal = withReactContent(Swal);
+
+  const handleDeleteButtonClick = () => {
+    MySwal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng, vẫn xóa!",
+      cancelButtonText: "Không, hủy xóa!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire(
+          "Đã xóa!",
+          `Đã xóa ${deletedLCV.ten} khỏi hệ thống`,
+          "success"
+        );
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
+      }
+    });
+  };
   return (
     <>
-      <Button className="btn-neutral mx-1" id="btnEdit">
+      <Button className="btn-neutral mx-1" onClick={() => handleEditButtonClick(data)}>
         <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
       </Button>
-      <Button className="btn-neutral mx-1" id="btnDelete">
+      <Button className="btn-neutral mx-1" onClick={handleDeleteButtonClick}>
         <FontAwesomeIcon icon={faTrash} className="text-danger" /> Xóa
       </Button>
     </>
   );
 };
 
-function LoaiCongVan(){
+function LoaiCongVan() {
   const MySwal = withReactContent(Swal);
   const [modalAdd, setModalAdd] = useState(false);
   const columns = [
@@ -57,13 +99,19 @@ function LoaiCongVan(){
       sortable: true,
     },
     {
-      cell: (row) => <ActionButton />,
+      cell: (row) => (
+        <ActionButton
+          data={row}
+          handleEditButtonClick={handleEditButtonClick}
+        />
+      ),
       center: true,
       maxWidth: "300px",
     },
   ];
   const data = useSelector(selectLCVData);
   const err = useSelector(selectLCVErr);
+  const edit = useSelector(selectLCVEdit);
   const dispatch = useDispatch();
   const [filterText, setFilterText] = useState("");
   const filterItem = data.filter((item) =>
@@ -81,6 +129,8 @@ function LoaiCongVan(){
         text: err.data,
         icon: "error",
         footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(resetError());
       });
   }, [err]);
 
@@ -92,7 +142,12 @@ function LoaiCongVan(){
 
   const handleAddButtonClick = () => {
     setModalAdd(!modalAdd);
-  }
+  };
+
+  const handleEditButtonClick = (data) => {
+    dispatch(setIsEdit(!edit));
+    dispatch(setForm(data));
+  };
 
   return (
     <Container fluid className="my-3 px-5">
@@ -114,10 +169,7 @@ function LoaiCongVan(){
           </InputGroup>
         </Col>
         <Col md={6} className="text-end">
-          <Button
-            className="btn-neutral"
-            onClick={handleAddButtonClick}
-          >
+          <Button className="btn-neutral" onClick={handleAddButtonClick}>
             <FontAwesomeIcon icon={faPlus} /> Thêm mới
           </Button>
         </Col>
@@ -149,8 +201,17 @@ function LoaiCongVan(){
           <LoaiCongVanCreate />
         </ModalBody>
       </Modal>
+      <Modal isOpen={edit} size="xl">
+        <ModalHeader toggle={() => dispatch(setIsEdit(!edit))}>
+          <FontAwesomeIcon icon={faPencilSquare} className="mx-2" />
+          Chỉnh sửa loại công văn
+        </ModalHeader>
+        <ModalBody>
+          <LoaiCongVanEdit />
+        </ModalBody>
+      </Modal>
     </Container>
   );
-};
+}
 
 export default LoaiCongVan;

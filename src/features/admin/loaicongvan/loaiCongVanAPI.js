@@ -6,5 +6,11 @@ export default {
   },
   post(form) {
     return Api().post('/loaicongvan', form);
+  },
+  put(_id, form) {
+    return Api().put('/loaicongvan/' + _id, form);
+  },
+  delete(_id) {
+    return Api().delete('/loaicongvan/' + _id);
   }
 }

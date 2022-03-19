@@ -14,17 +14,17 @@ import {
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import {
-  createDataAsync,
+  editDataAsync,
   getDataAsync,
   onChangeTen,
   onChangeViettat,
-  resetForm,
-  selectLCVData,
+  resetError,
   selectLCVForm,
   setIsEdit,
+  setSubmittedForm,
 } from "./loaiCongVanSlice";
 
-function LoaiCongVanCreate() {
+function LoaiCongVanEdit() {
   const MySwal = withReactContent(Swal);
   const [tooltipName, setTooltipName] = useState(false);
   const [tooltipAbbreviation, setTooltipAbbreviation] = useState(false);
@@ -33,26 +33,40 @@ function LoaiCongVanCreate() {
 
   const handleButtonClick = (e) => {
     e.preventDefault();
-    dispatch(createDataAsync(form));
+    dispatch(editDataAsync(form));
     dispatch(getDataAsync());
-    dispatch(setIsEdit(false));
   };
 
   useEffect(() => {
-    dispatch(resetForm());
+    dispatch(resetError());
   }, []);
 
   useEffect(() => {
+    console.log(form.isSubmitted);
     if (form.isSubmitted)
       MySwal.fire({
         title: <h1>Lưu thành công</h1>,
-        text: `Đẵ lưu ${form.ten} vào hệ thống`,
+        text: `Đã lưu ${form.ten} vào hệ thống`,
         icon: "info",
         footer: "EOffice &copy; 2022",
       }).then(() => {
-        dispatch(resetForm());
+        dispatch(setSubmittedForm(false));
+        dispatch(setIsEdit(false));
       });
   }, [form.isSubmitted]);
+
+  useEffect(() => {
+    console.log(form.isSubmitted);
+    if (form.isSubmitted)
+      MySwal.fire({
+        title: <h1>Lưu thành công</h1>,
+        text: `Đã lưu ${form.ten} vào hệ thống`,
+        icon: "info",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(setSubmittedForm(false));
+      });
+  }, [form.errVT, form.errTen]);
 
   return (
     <div>
@@ -111,7 +125,7 @@ function LoaiCongVanCreate() {
         </FormGroup>
         <FormGroup>
           <Button className="btn-neutral w-100" onClick={handleButtonClick}>
-            <b>Thêm mới</b>
+            <b>Cập nhật</b>
           </Button>
         </FormGroup>
       </Form>
@@ -119,4 +133,4 @@ function LoaiCongVanCreate() {
   );
 }
 
-export default LoaiCongVanCreate;
+export default LoaiCongVanEdit;
