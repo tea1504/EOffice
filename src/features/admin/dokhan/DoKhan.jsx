@@ -1,5 +1,6 @@
 import {
   faEdit,
+  faPencilSquare,
   faPlus,
   faPlusSquare,
   faTrash,
@@ -23,15 +24,69 @@ import {
   Row,
 } from "reactstrap";
 import { customStyles, paginationConfig } from "../../../app/datatableConfig";
-import { getDataAsync, selectDKAdd, selectDKData, setAdd } from "./doKhanSlice";
+import {
+  deleteDataAsync,
+  getDataAsync,
+  selectDKAdd,
+  selectDKData,
+  selectDKEdit,
+  setAdd,
+  setEdit,
+  setForm,
+} from "./doKhanSlice";
+import DoKhanCreate from "./DoKhanCreate";
+import DoKhanEdit from "./DoKhanEdit";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
-const ActionButton = () => {
+const ActionButton = ({ data }) => {
+  const MySwal = withReactContent(Swal);
+  const dispatch = useDispatch();
+
+  const handleEditButtonClick = (data) => {
+    dispatch(setEdit(true));
+    dispatch(setForm(data));
+  };
+
+  const handleDeleteButtonClick = () => {
+    MySwal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng, vẫn xóa!",
+      cancelButtonText: "Không, hủy xóa!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire(
+          "Đã xóa!",
+          `Đã xóa ${data.ten} khỏi hệ thống`,
+          "success"
+        );
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
+      }
+    });
+  };
+
   return (
     <>
-      <Button className="btn-neutral mx-1">
+      <Button
+        className="btn-neutral mx-1"
+        onClick={() => handleEditButtonClick(data)}
+      >
         <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
       </Button>
-      <Button className="btn-neutral mx-1">
+      <Button
+        className="btn-neutral mx-1"
+        onClick={() => handleDeleteButtonClick(data)}
+      >
         <FontAwesomeIcon icon={faTrash} className="text-danger" /> Xóa
       </Button>
     </>
@@ -52,7 +107,7 @@ function DoKhan() {
       sortable: true,
     },
     {
-      cell: () => <ActionButton />,
+      cell: (row) => <ActionButton data={row} />,
       center: true,
       maxWidth: "300px",
     },
@@ -64,6 +119,7 @@ function DoKhan() {
     item.ten.toLowerCase().includes(filterText.toLowerCase())
   );
   const add = useSelector(selectDKAdd);
+  const edit = useSelector(selectDKEdit);
 
   useEffect(() => {
     dispatch(getDataAsync());
@@ -118,7 +174,18 @@ function DoKhan() {
           <FontAwesomeIcon icon={faPlusSquare} className="mx-2" />
           Thêm độ khẩn
         </ModalHeader>
-        <ModalBody></ModalBody>
+        <ModalBody>
+          <DoKhanCreate />
+        </ModalBody>
+      </Modal>
+      <Modal isOpen={edit} size="xl">
+        <ModalHeader toggle={() => dispatch(setEdit(!edit))}>
+          <FontAwesomeIcon icon={faPencilSquare} className="mx-2" />
+          Chỉnh sửa độ khẩn
+        </ModalHeader>
+        <ModalBody>
+          <DoKhanEdit />
+        </ModalBody>
       </Modal>
     </Container>
   );

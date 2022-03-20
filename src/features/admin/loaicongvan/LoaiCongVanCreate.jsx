@@ -19,7 +19,6 @@ import {
   onChangeTen,
   onChangeViettat,
   resetForm,
-  selectLCVData,
   selectLCVForm,
   setIsEdit,
 } from "./loaiCongVanSlice";
@@ -46,7 +45,7 @@ function LoaiCongVanCreate() {
     if (form.isSubmitted)
       MySwal.fire({
         title: <h1>Lưu thành công</h1>,
-        text: `Đẵ lưu ${form.ten} vào hệ thống`,
+        text: `Đã lưu ${form.ten} vào hệ thống`,
         icon: "info",
         footer: "EOffice &copy; 2022",
       }).then(() => {
