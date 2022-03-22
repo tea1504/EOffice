@@ -1,9 +1,18 @@
-import { faBook, faDashboard, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBan,
+  faBook,
+  faDashboard,
+  faPersonRunning,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { selectUserAdmin } from "../../features/user/userSlice";
+
+let activeStyle = {
+  color: "white",
+};
 
 export const MySidebar = () => {
   const admin = useSelector(selectUserAdmin);
@@ -19,7 +28,13 @@ export const MySidebar = () => {
                 <div className="simplebar-content">
                   {admin && (
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/admin">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/home"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
                         <FontAwesomeIcon
                           className="nav-icon"
                           icon={faDashboard}
@@ -31,10 +46,7 @@ export const MySidebar = () => {
                   {admin && (
                     <li className="nav-item">
                       <NavLink className="nav-link" to="/admin/loaicongvan">
-                        <FontAwesomeIcon
-                          className="nav-icon"
-                          icon={faBook}
-                        />
+                        <FontAwesomeIcon className="nav-icon" icon={faBook} />
                         Loại công văn
                       </NavLink>
                     </li>
@@ -47,6 +59,20 @@ export const MySidebar = () => {
                           icon={faPersonRunning}
                         />
                         Độ khẩn
+                      </NavLink>
+                    </li>
+                  )}
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/domat"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon className="nav-icon" icon={faBan} />
+                        Độ mật
                       </NavLink>
                     </li>
                   )}

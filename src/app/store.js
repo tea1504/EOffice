@@ -5,6 +5,7 @@ import userReducer from '../features/user/userSlice';
 import loaiCongVanReducer from '../features/admin/loaicongvan/loaiCongVanSlice';
 import commonReducer from '../features/common/commonSlide';
 import doKhanReducer from '../features/admin/dokhan/doKhanSlice';
+import doMatReducer from '../features/admin/domat/doMatSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     common: commonReducer,
     lcv: loaiCongVanReducer,
     dk: doKhanReducer,
+    dm: doMatReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

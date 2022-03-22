@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import cookie from "js-cookie";
 
@@ -16,6 +16,7 @@ import { setToken } from "./features/login/loginSlice";
 import { useEffect } from "react";
 import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
 import DoKhan from "./features/admin/dokhan/DoKhan";
+import DoMat from "./features/admin/domat/DoMat";
 
 function App() {
   const dispatch = useDispatch();
@@ -38,12 +39,16 @@ function App() {
           <Route path="/" element={<Home />}>
             <Route element={<ProtectedAdminRoutes />}>
               <Route path="admin">
-                <Route path="" element={<Admin />} />
+                <Route path="" element={<Navigate to="home" replace />} />
+                <Route path="home" element={<Admin />} />
                 <Route path="loaicongvan">
                   <Route path="" element={<LoaiCongVan />} />
                 </Route>
                 <Route path="dokhan">
                   <Route path="" element={<DoKhan />} />
+                </Route>
+                <Route path="domat">
+                  <Route path="" element={<DoMat />} />
                 </Route>
               </Route>
             </Route>
