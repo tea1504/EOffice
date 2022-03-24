@@ -102,7 +102,7 @@ const ExpandedComponent = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.listbenngoai.list.map((element, index) => {
+          {data.listbenngoai.map((element, index) => {
             return (
               <tr key={index}>
                 <td>{index + 1}</td>
@@ -214,7 +214,7 @@ function DonVi() {
               columns={columns}
               data={filterItem}
               expandableRowDisabled={(row) =>
-                row.listbenngoai.list.length === 0
+                row.listbenngoai.length === 0
               }
             />
           </Card>
