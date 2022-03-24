@@ -1,6 +1,7 @@
 import {
   faBan,
   faBook,
+  faBuilding,
   faDashboard,
   faPersonRunning,
 } from "@fortawesome/free-solid-svg-icons";
@@ -45,7 +46,13 @@ export const MySidebar = () => {
                   )}
                   {admin && (
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/admin/loaicongvan">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/loaicongvan"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
                         <FontAwesomeIcon className="nav-icon" icon={faBook} />
                         Loại công văn
                       </NavLink>
@@ -53,7 +60,13 @@ export const MySidebar = () => {
                   )}
                   {admin && (
                     <li className="nav-item">
-                      <NavLink className="nav-link" to="/admin/dokhan">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/dokhan"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
                         <FontAwesomeIcon
                           className="nav-icon"
                           icon={faPersonRunning}
@@ -73,6 +86,23 @@ export const MySidebar = () => {
                       >
                         <FontAwesomeIcon className="nav-icon" icon={faBan} />
                         Độ mật
+                      </NavLink>
+                    </li>
+                  )}
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/donvi"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon"
+                          icon={faBuilding}
+                        />
+                        Đơn vị
                       </NavLink>
                     </li>
                   )}

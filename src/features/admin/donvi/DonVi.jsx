@@ -11,87 +11,83 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  Container,
-  Row,
-  Col,
-  InputGroup,
-  Input,
-  InputGroupText,
   Button,
   Card,
+  Col,
+  Container,
+  Input,
+  InputGroup,
+  InputGroupText,
   Modal,
-  ModalHeader,
   ModalBody,
+  ModalHeader,
+  Row,
+  Table,
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../../app/datatableConfig";
-import DoKhanCreate from "./DoMatCreate";
-import DoMatEdit from "./DoMatEdit";
+import DonViCreate from "./DonViCreate";
+import DonViEdit from "./DonViEdit";
 import {
-  deleteDataAsync,
   getDataAsync,
   resetErr,
-  selectDMAdd,
-  selectDMData,
-  selectDMEdit,
-  selectDMErr,
+  selectDVAdd,
+  selectDVData,
+  selectDVEdit,
+  selectDVErr,
   setAdd,
   setEdit,
   setForm,
-} from "./doMatSlice";
+} from "./donViSlice";
 
 const ActionButton = ({ data }) => {
-  const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
-
-  const handleEditButtonClick = (data) => {
+  const handleEditButtonClick = () => {
+    dispatch(setForm(data))
     dispatch(setEdit(true));
-    dispatch(setForm(data));
   };
-
-  const handleDeleteButtonClick = () => {
-    MySwal.fire({
-      title: "Bạn có chắc chắn?",
-      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Vâng, vẫn xóa!",
-      cancelButtonText: "Không, hủy xóa!",
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(deleteDataAsync(data._id));
-        dispatch(getDataAsync());
-        MySwal.fire("Đã xóa!", `Đã xóa ${data.ten} khỏi hệ thống`, "success");
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
-      }
-    });
-  };
-
   return (
     <>
-      <Button
-        className="btn-neutral mx-1"
-        onClick={() => handleEditButtonClick(data)}
-      >
+      <Button className="btn-neutral mx-1" onClick={handleEditButtonClick}>
         <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
       </Button>
-      <Button
-        className="btn-neutral mx-1"
-        onClick={() => handleDeleteButtonClick(data)}
-      >
+      <Button className="btn-neutral mx-1">
         <FontAwesomeIcon icon={faTrash} className="text-danger" /> Xóa
       </Button>
     </>
   );
 };
 
-function DoMat() {
+const ExpandedComponent = ({ data }) => {
+  return (
+    <div className="px-5 bg-secondary bg-gradient py-3">
+      <h5 className="text-white">Đơn vị bên ngoài của {data.ten}</h5>
+      <Table className="text-white">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tên đơn vị</th>
+            <th>Email đơn vị</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.listbenngoai.list.map((element, index) => {
+            return (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{element.ten}</td>
+                <td>{element.email}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </div>
+  );
+};
+
+function DonVi() {
   const MySwal = withReactContent(Swal);
   const columns = [
     {
@@ -101,8 +97,13 @@ function DoMat() {
       right: true,
     },
     {
-      name: "Độ khẩn",
+      name: "Tên đơn vị",
       selector: (row) => row.ten,
+      sortable: true,
+    },
+    {
+      name: "Email đơn vị",
+      selector: (row) => row.email,
       sortable: true,
     },
     {
@@ -111,15 +112,17 @@ function DoMat() {
       maxWidth: "300px",
     },
   ];
-  const data = useSelector(selectDMData);
-  const err = useSelector(selectDMErr);
+  const data = useSelector(selectDVData);
   const dispatch = useDispatch();
+  const err = useSelector(selectDVErr);
   const [filterText, setFilterText] = useState("");
-  const filterItem = data.filter((item) =>
-    item.ten.toLowerCase().includes(filterText.toLowerCase())
+  const filterItem = data.filter(
+    (item) =>
+      item.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.email.toLowerCase().includes(filterText.toLowerCase())
   );
-  const edit = useSelector(selectDMEdit);
-  const add = useSelector(selectDMAdd);
+  const edit = useSelector(selectDVEdit);
+  const add = useSelector(selectDVAdd);
 
   useEffect(() => {
     dispatch(getDataAsync());
@@ -141,24 +144,27 @@ function DoMat() {
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
         <Col md={12} className="mb-2">
-          <h2>Độ mật</h2>
+          <h2>Đơn vị</h2>
         </Col>
         <Col md={6}>
           <InputGroup>
             <Input
               type="text"
-              className="input-custom"
               placeholder="Tìm kiếm ..."
+              className="input-custom"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
             />
-            <InputGroupText onClick={() => setFilterText("")}>
+            <InputGroupText>
               <FontAwesomeIcon icon={faXmark} />
             </InputGroupText>
           </InputGroup>
         </Col>
         <Col md={6} className="text-end">
-          <Button className="btn-neutral" onClick={() => dispatch(setAdd(true))}>
+          <Button
+            className="btn-neutral"
+            onClick={() => dispatch(setAdd(true))}
+          >
             <FontAwesomeIcon icon={faPlus} /> Thêm mới
           </Button>
         </Col>
@@ -172,33 +178,38 @@ function DoMat() {
               fixedHeader
               fixedHeaderScrollHeight="65vh"
               highlightOnHover
+              expandableRows
+              expandableRowsComponent={ExpandedComponent}
               customStyles={customStyles}
               columns={columns}
               data={filterItem}
+              expandableRowDisabled={(row) =>
+                row.listbenngoai.list.length === 0
+              }
             />
           </Card>
         </Col>
       </Row>
-      <Modal isOpen={add} size="xl">
+      <Modal size="xl" isOpen={add}>
         <ModalHeader toggle={() => dispatch(setAdd(!add))}>
           <FontAwesomeIcon icon={faPlusSquare} className="mx-2" />
-          Thêm độ mật
+          Thêm đơn vị
         </ModalHeader>
         <ModalBody>
-          <DoKhanCreate />
+          <DonViCreate />
         </ModalBody>
       </Modal>
-      <Modal isOpen={edit} size="xl">
+      <Modal size="xl" isOpen={edit}>
         <ModalHeader toggle={() => dispatch(setEdit(!edit))}>
           <FontAwesomeIcon icon={faPencilSquare} className="mx-2" />
-          Chỉnh sửa độ mật
+          Chỉnh sửa đơn vị
         </ModalHeader>
         <ModalBody>
-          <DoMatEdit />
+          <DonViEdit />
         </ModalBody>
       </Modal>
     </Container>
   );
 }
 
-export default DoMat;
+export default DonVi;

@@ -40,7 +40,7 @@ function DoKhanCreate() {
     <Form>
       <FormGroup>
         <Label>
-          <b>Tên độ khẩn</b>
+          <b>Tên độ mật</b>
           <FontAwesomeIcon
             icon={faCircleInfo}
             className="mx-1 text-muted"

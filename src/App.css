@@ -258,3 +258,7 @@
   border: 1px solid #ccc;
   color: black;
 }
+
+.active .nav-icon {
+  color: white;
+}

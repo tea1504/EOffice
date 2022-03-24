@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
 import DoKhan from "./features/admin/dokhan/DoKhan";
 import DoMat from "./features/admin/domat/DoMat";
+import DonVi from "./features/admin/donvi/DonVi";
 
 function App() {
   const dispatch = useDispatch();
@@ -47,9 +48,8 @@ function App() {
                 <Route path="dokhan">
                   <Route path="" element={<DoKhan />} />
                 </Route>
-                <Route path="domat">
-                  <Route path="" element={<DoMat />} />
-                </Route>
+                <Route path="domat" element={<DoMat />} />
+                <Route path="donvi" element={<DonVi />} />
               </Route>
             </Route>
           </Route>
