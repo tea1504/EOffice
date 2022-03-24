@@ -30,6 +30,7 @@ import { customStyles, paginationConfig } from "../../../app/datatableConfig";
 import DonViCreate from "./DonViCreate";
 import DonViEdit from "./DonViEdit";
 import {
+  deleteDataAsync,
   getDataAsync,
   resetErr,
   selectDVAdd,
@@ -42,17 +43,46 @@ import {
 } from "./donViSlice";
 
 const ActionButton = ({ data }) => {
+  const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
+
   const handleEditButtonClick = () => {
-    dispatch(setForm(data))
+    dispatch(setForm(data));
     dispatch(setEdit(true));
   };
+
+  const handleDeleteButtonClick = () => {
+    MySwal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng, vẫn xóa!",
+      cancelButtonText: "Không, hủy xóa!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire("Đã xóa!", `Đã xóa ${data.ten} khỏi hệ thống`, "success");
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
+      }
+    });
+  };
+
   return (
     <>
       <Button className="btn-neutral mx-1" onClick={handleEditButtonClick}>
         <FontAwesomeIcon icon={faEdit} /> Chỉnh sửa
       </Button>
-      <Button className="btn-neutral mx-1">
+      <Button
+        className="btn-neutral mx-1"
+        onClick={() => handleDeleteButtonClick(data)}
+      >
         <FontAwesomeIcon icon={faTrash} className="text-danger" /> Xóa
       </Button>
     </>
