@@ -4,6 +4,7 @@ import {
   faBuilding,
   faDashboard,
   faPersonRunning,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
@@ -103,6 +104,23 @@ export const MySidebar = () => {
                           icon={faBuilding}
                         />
                         Đơn vị
+                      </NavLink>
+                    </li>
+                  )}
+                  {admin && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/admin/canbo"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon"
+                          icon={faUser}
+                        />
+                        Cán bộ
                       </NavLink>
                     </li>
                   )}

@@ -7,6 +7,7 @@ import commonReducer from '../features/common/commonSlide';
 import doKhanReducer from '../features/admin/dokhan/doKhanSlice';
 import doMatReducer from '../features/admin/domat/doMatSlice';
 import donViReducer from '../features/admin/donvi/donViSlice';
+import canBoReducer from '../features/admin/canbo/canBoSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     dk: doKhanReducer,
     dm: doMatReducer,
     dv: donViReducer,
+    cb: canBoReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -1,0 +1,214 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import api from './canBoAPI'
+
+const initialState = {
+  data: [],
+  form: {
+    _id: '',
+    ten: '',
+    donvi: '',
+    tendonvi: '',
+    ma: '',
+    holot: '',
+    email: '',
+    sdt: '',
+    laadmin: false,
+    lalanhdao: false,
+    lavanthu: false,
+    actived: false,
+    errTen: null,
+    errDonVi: null,
+    errMa: null,
+    errHoLot: null,
+    errEmail: null,
+    errsdt: null,
+    isSubmitted: false,
+  },
+  add: false,
+  edit: false,
+  detail: false,
+  err: null,
+}
+
+export const getDataAsync = createAsyncThunk(
+  'canbo/getdata',
+  async () => {
+    try {
+      const response = await api.get();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const createDataAsync = createAsyncThunk(
+  'canbo/createdata',
+  async (form) => {
+    try {
+      const response = await api.post(form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const editDataAsync = createAsyncThunk(
+  'canbo/editdata',
+  async (form) => {
+    try {
+      const response = await api.put(form._id, form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const deleteDataAsync = createAsyncThunk(
+  'canbo/dalatedata',
+  async (id) => {
+    try {
+      const response = await api.delete(id);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const canBoSlice = createSlice({
+  name: 'canbo',
+  initialState,
+  reducers: {
+    resetErr: (state) => {
+      state.err = null;
+    },
+    setEdit: (state, action) => {
+      state.edit = action.payload;
+    },
+    setAdd: (state, action) => {
+      state.add = action.payload;
+    },
+    setDetail: (state, action) => {
+      state.detail = action.payload;
+    },
+    setForm: (state, action) => {
+      state.form._id = action.payload._id;
+      state.form.ma = action.payload.ma;
+      state.form.ten = action.payload.ten;
+      state.form.donvi = action.payload.donvi._id;
+      state.form.tendonvi = action.payload.donvi.ten;
+      state.form.holot = action.payload.holot;
+      state.form.email = action.payload.email;
+      state.form.sdt = action.payload.sdt;
+      state.form.laadmin = action.payload.laadmin;
+      state.form.lalanhdao = action.payload.lalanhdao;
+      state.form.lavanthu = action.payload.lavanthu;
+      state.form.actived = action.payload.actived;
+    },
+    onChangeFormTen: (state, action) => {
+      state.form.ten = action.payload;
+    },
+    onChangeFormMa: (state, action) => {
+      state.form.ma = action.payload;
+    },
+    onChangeFormDonVi: (state, action) => {
+      state.form.donvi = action.payload;
+    },
+    onChangeFormHoLot: (state, action) => {
+      state.form.holot = action.payload;
+    },
+    onChangeFormEmail: (state, action) => {
+      state.form.email = action.payload;
+    },
+    onChangeFormSdt: (state, action) => {
+      state.form.sdt = action.sdt;
+    },
+    resetForm: (state) => {
+      state.form.ten = "";
+      state.form._id = "";
+      state.form.donvi = "";
+      state.form.ma = "";
+      state.form.holot = "";
+      state.form.email = "";
+      state.form.sdt = "";
+      state.form.laadmin = false;
+      state.form.lalanhdao = false;
+      state.form.lavanthu = false;
+      state.form.actived = false;
+      state.form.errTen = null;
+      state.form.errDonVi = null;
+      state.form.errMa = null;
+      state.form.errHoLot = null;
+      state.form.errEmail = null;
+      state.form.errsdt = null;
+      state.form.isSubmitted = false;
+    },
+    resetFormErr: (state) => {
+      state.form.errTen = null;
+      state.form.errDonVi = null;
+      state.form.errMa = null;
+      state.form.errHoLot = null;
+      state.form.errEmail = null;
+      state.form.errsdt = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
+      .addCase(createDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.data.code)
+            state.form.errTen = "Trùng tên độ mật";
+          else if (action.payload.data.errors)
+            state.form.errTen = action.payload.data.errors.ten.message;
+          else
+            state.form.errTen = "Lỗi server"
+        }
+        else
+          state.form.isSubmitted = true;
+      })
+      .addCase(editDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.data.code)
+            state.form.errTen = "Trùng tên độ mật";
+          else if (action.payload.data.errors)
+            state.form.errTen = action.payload.data.errors.ten.message;
+          else
+            state.form.errTen = "Lỗi server"
+        }
+        else
+          state.form.isSubmitted = true;
+      })
+      .addCase(deleteDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 404, data: "Lỗi server" }
+        }
+      })
+  }
+})
+
+export const selectCBData = state => state.cb.data;
+export const selectCBEdit = state => state.cb.edit;
+export const selectCBDetail = state => state.cb.detail;
+export const selectCBAdd = state => state.cb.add;
+export const selectCBForm = state => state.cb.form;
+export const selectCBErr = state => state.cb.err;
+
+export const { resetErr, setDetail, setEdit, setAdd, setForm, onChangeFormTen, resetForm, resetFormErr, onChangeFormDonVi, onChangeFormEmail, onChangeFormMa, onChangeFormHoLot } = canBoSlice.actions;
+
+export default canBoSlice.reducer;

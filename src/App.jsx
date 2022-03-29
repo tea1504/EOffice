@@ -18,6 +18,7 @@ import LoaiCongVan from "./features/admin/loaicongvan/LoaiCongVan";
 import DoKhan from "./features/admin/dokhan/DoKhan";
 import DoMat from "./features/admin/domat/DoMat";
 import DonVi from "./features/admin/donvi/DonVi";
+import CanBo from "./features/admin/canbo/CanBo";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,6 +51,7 @@ function App() {
                 </Route>
                 <Route path="domat" element={<DoMat />} />
                 <Route path="donvi" element={<DonVi />} />
+                <Route path="canbo" element={<CanBo />} />
               </Route>
             </Route>
           </Route>
