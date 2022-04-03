@@ -35,6 +35,7 @@ import CanBoCreate from "./CanBoCreate";
 import CanBoDetail from "./CanBoDetail";
 import {
   getDataAsync,
+  resetErr,
   selectCBAdd,
   selectCBData,
   selectCBDetail,
@@ -44,7 +45,7 @@ import {
   setDetail,
   setForm,
 } from "./canBoSlice";
-import { selectDVData, getDataAsync as getDonVi } from '../donvi/donViSlice'
+import { selectDVData, getDataAsync as getDonVi } from "../donvi/donViSlice";
 
 const ActionButton = ({ data }) => {
   const MySwal = withReactContent(Swal);
@@ -152,8 +153,12 @@ function CanBo() {
   const err = useSelector(selectCBErr);
   const dispatch = useDispatch();
   const [filterText, setFilterText] = useState("");
-  const filterItem = data.filter((item) =>
-    item.ten.toLowerCase().includes(filterText.toLowerCase())
+  const filterItem = data.filter(
+    (item) =>
+      item.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.holot.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.ma.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.donvi.ten.toLowerCase().includes(filterText.toLowerCase())
   );
   const edit = useSelector(selectCBEdit);
   const add = useSelector(selectCBAdd);
@@ -174,6 +179,18 @@ function CanBo() {
     dispatch(getDonVi());
   }, []);
 
+  useEffect(() => {
+    if (err)
+      MySwal.fire({
+        title: <h1>Error {err.status}</h1>,
+        text: err.data,
+        icon: "error",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(resetErr());
+      });
+  }, [err]);
+
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
@@ -182,8 +199,13 @@ function CanBo() {
         </Col>
         <Col md={6}>
           <InputGroup>
-            <Input placeholder="Tìm kiếm ..." className="input-custom" />
-            <InputGroupText>
+            <Input
+              placeholder="Tìm kiếm ..."
+              className="input-custom"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+            <InputGroupText onClick={() => setFilterText("")}>
               <FontAwesomeIcon icon={faXmark} />
             </InputGroupText>
           </InputGroup>
@@ -229,7 +251,7 @@ function CanBo() {
           Thêm cán bộ
         </ModalHeader>
         <ModalBody>
-          <CanBoCreate donVi={donVi}/>
+          <CanBoCreate donVi={donVi} />
         </ModalBody>
       </Modal>
       <Modal isOpen={false} size="xl">
