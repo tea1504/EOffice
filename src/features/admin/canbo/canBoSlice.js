@@ -47,7 +47,6 @@ export const createDataAsync = createAsyncThunk(
   'canbo/createdata',
   async (form) => {
     try {
-      console.log(form);
       const response = await api.post(form);
       return response.data;
     } catch (error) {
@@ -73,6 +72,18 @@ export const deleteDataAsync = createAsyncThunk(
   async (id) => {
     try {
       const response = await api.delete(id);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const lockDataAsync = createAsyncThunk(
+  'canbo/lockdata',
+  async (id) => {
+    try {
+      const response = await api.lock(id);
       return response.data;
     } catch (error) {
       return error.response;
@@ -136,6 +147,9 @@ export const canBoSlice = createSlice({
     },
     toggleVanThu: (state, action) => {
       state.form.lavanthu = action.payload;
+    },
+    toggleActived: (state, action) => {
+      state.form.actived = action.payload;
     },
     resetForm: (state) => {
       state.form.ten = "";
@@ -204,12 +218,31 @@ export const canBoSlice = createSlice({
       })
       .addCase(editDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
-          if (action.payload.data.code)
-            state.form.errTen = "Trùng tên độ mật";
-          else if (action.payload.data.errors)
-            state.form.errTen = action.payload.data.errors.ten.message;
+          if (action.payload.data.code) {
+            if (action.payload.data.keyPattern.email)
+              state.form.errEmail = action.payload.data.keyValue.email + " bị trùng";
+            if (action.payload.data.keyPattern.ma)
+              state.form.errMa = action.payload.data.keyValue.ma + " bị trùng";
+            if (action.payload.data.keyPattern.sdt)
+              state.form.errsdt = action.payload.data.keyValue.sdt + " bị trùng";
+          }
+          else if (action.payload.data.errors) {
+            state.form.errMa = action.payload.data.errors.ma?.message;
+            state.form.errHoLot = action.payload.data.errors.holot?.message;
+            state.form.errTen = action.payload.data.errors.ten?.message;
+            state.form.errEmail = action.payload.data.errors.email?.message;
+            state.form.errsdt = action.payload.data.errors.sdt?.message;
+            state.form.errDonVi = action.payload.data.errors.donvi ? "Bạn phải chọn đơn vị" : null;
+          }
           else
-            state.form.errTen = "Lỗi server"
+            state.err = { status: action.payload.data.code, data: action.payload.data }
+        }
+        else
+          state.form.isSubmitted = true;
+      })
+      .addCase(lockDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          state.err = { status: 401, data: action.payload.data }
         }
         else
           state.form.isSubmitted = true;
@@ -219,7 +252,7 @@ export const canBoSlice = createSlice({
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }
           else
-            state.err = { status: 404, data: "Lỗi server" }
+            state.err = { status: 500, data: "Lỗi server" }
         }
       })
   }
@@ -232,6 +265,6 @@ export const selectCBAdd = state => state.cb.add;
 export const selectCBForm = state => state.cb.form;
 export const selectCBErr = state => state.cb.err;
 
-export const { resetErr, setDetail, setEdit, setAdd, setForm, onChangeFormTen, resetForm, resetFormErr, onChangeFormDonVi, onChangeFormEmail, onChangeFormMa, onChangeFormHoLot, onChangeFormSdt, toggleAdmin, toggleLanhDao, toggleVanThu } = canBoSlice.actions;
+export const { resetErr, setDetail, setEdit, setAdd, setForm, onChangeFormTen, resetForm, resetFormErr, onChangeFormDonVi, onChangeFormEmail, onChangeFormMa, onChangeFormHoLot, onChangeFormSdt, toggleAdmin, toggleLanhDao, toggleVanThu, toggleActived } = canBoSlice.actions;
 
 export default canBoSlice.reducer;

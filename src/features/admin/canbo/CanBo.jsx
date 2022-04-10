@@ -44,8 +44,11 @@ import {
   setAdd,
   setDetail,
   setForm,
+  setEdit,
+  deleteDataAsync,
 } from "./canBoSlice";
 import { selectDVData, getDataAsync as getDonVi } from "../donvi/donViSlice";
+import CanBoEdit from "./CanBoEdit";
 
 const ActionButton = ({ data }) => {
   const MySwal = withReactContent(Swal);
@@ -57,6 +60,34 @@ const ActionButton = ({ data }) => {
   const handleXemButtonClick = () => {
     dispatch(setForm(data));
     dispatch(setDetail(true));
+  };
+
+  const handleEditButtonClick = () => {
+    dispatch(setForm(data));
+    dispatch(setEdit(true));
+  };
+
+  const handleDeleteButtonClick = () => {
+    MySwal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng, vẫn xóa!",
+      cancelButtonText: "Không, hủy xóa!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire("Đã xóa!", `Đã xóa ${data.ten} khỏi hệ thống`, "success");
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
+      }
+    });
   };
 
   return (
@@ -75,7 +106,11 @@ const ActionButton = ({ data }) => {
       >
         Xem chi tiết
       </Tooltip>
-      <Button className="btn-neutral mx-1" id="btnEdit">
+      <Button
+        className="btn-neutral mx-1"
+        id="btnEdit"
+        onClick={handleEditButtonClick}
+      >
         <FontAwesomeIcon icon={faEdit} />
       </Button>
       <Tooltip
@@ -85,7 +120,11 @@ const ActionButton = ({ data }) => {
       >
         Chỉnh sửa
       </Tooltip>
-      <Button className="btn-neutral mx-1" id="btnDel">
+      <Button
+        className="btn-neutral mx-1"
+        id="btnDel"
+        onClick={() => handleDeleteButtonClick(data)}
+      >
         <FontAwesomeIcon icon={faTrash} className="text-danger" />
       </Button>
       <Tooltip
@@ -254,12 +293,14 @@ function CanBo() {
           <CanBoCreate donVi={donVi} />
         </ModalBody>
       </Modal>
-      <Modal isOpen={false} size="xl">
-        <ModalHeader toggle={() => false}>
+      <Modal isOpen={edit} size="xl">
+        <ModalHeader toggle={() => dispatch(setEdit(false))}>
           <FontAwesomeIcon icon={faPencilSquare} className="mx-2" />
           Chỉnh sửa cán bộ
         </ModalHeader>
-        <ModalBody></ModalBody>
+        <ModalBody>
+          <CanBoEdit donVi={donVi} />
+        </ModalBody>
       </Modal>
     </Container>
   );
