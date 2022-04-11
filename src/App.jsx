@@ -19,6 +19,8 @@ import DoKhan from "./features/admin/dokhan/DoKhan";
 import DoMat from "./features/admin/domat/DoMat";
 import DonVi from "./features/admin/donvi/DonVi";
 import CanBo from "./features/admin/canbo/CanBo";
+import CongVanDen from "./features/congvanden/CongVanDen";
+import CongVanDenCreate from "./features/congvanden/CongVanDenCreate";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,6 +55,10 @@ function App() {
                 <Route path="donvi" element={<DonVi />} />
                 <Route path="canbo" element={<CanBo />} />
               </Route>
+            </Route>
+            <Route path="congvanden">
+              <Route path="" element={<CongVanDen />} />
+              <Route path="them" element={<CongVanDenCreate />} />
             </Route>
           </Route>
           <Route path="*" element={<Page404 />} />

@@ -100,7 +100,8 @@
   flex: 1;
   align-items: center;
   padding: 0.8445rem 1rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: white;
+  opacity: 0.5;
   text-decoration: none;
   white-space: nowrap;
   background: transparent;
@@ -111,10 +112,19 @@
   flex: 0 0 4rem;
   height: 1.25rem;
   font-size: 1.25rem;
-  color: var(--cui-sidebar-nav-link-icon-color, rgba(255, 255, 255, 0.6));
+  /* color: var(--cui-sidebar-nav-link-icon-color, rgba(255, 255, 255, 0.6)); */
   text-align: center;
   fill: currentColor;
   transition: inherit;
+}
+
+.nav-icon{
+  color: white;
+  opacity: 0.5;
+}
+
+.active .nav-icon {
+  opacity: 1;
 }
 
 .header {
@@ -257,8 +267,4 @@
   background-color: white;
   border: 1px solid #ccc;
   color: black;
-}
-
-.active .nav-icon {
-  color: white;
 }

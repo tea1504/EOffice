@@ -3,6 +3,7 @@ import {
   faBook,
   faBuilding,
   faDashboard,
+  faFileImport,
   faPersonRunning,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -10,14 +11,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { selectUserAdmin } from "../../features/user/userSlice";
+import {
+  selectUserAdmin,
+  selectUserLanhDao,
+  selectUserVanThu,
+} from "../../features/user/userSlice";
 
 let activeStyle = {
-  color: "white",
+  // color: "white",
+  opacity: "1",
 };
 
 export const MySidebar = () => {
   const admin = useSelector(selectUserAdmin);
+  const lanhdao = useSelector(selectUserLanhDao);
+  const vanthu = useSelector(selectUserVanThu);
 
   return (
     <div className="sidebar">
@@ -116,11 +124,25 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon
-                          className="nav-icon"
-                          icon={faUser}
-                        />
+                        <FontAwesomeIcon className="nav-icon" icon={faUser} />
                         Cán bộ
+                      </NavLink>
+                    </li>
+                  )}
+                  {(lanhdao || vanthu || (!lanhdao && !vanthu && !admin)) && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/congvanden"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon text-success"
+                          icon={faFileImport}
+                        />
+                        Công Văn đến
                       </NavLink>
                     </li>
                   )}
