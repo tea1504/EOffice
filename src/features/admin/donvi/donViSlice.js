@@ -28,6 +28,18 @@ export const getDataAsync = createAsyncThunk(
   }
 )
 
+export const getDataByClericalAssistantAsync = createAsyncThunk(
+  'donvi/getdatabyclericalassistant',
+  async () => {
+    try {
+      const response = await api.getByClericalAssistant();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const createDataAsync = createAsyncThunk(
   'donvi/createdata',
   async (form) => {
@@ -109,6 +121,13 @@ export const donViSlice = createSlice({
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }
           else
             state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
+      .addCase(getDataByClericalAssistantAsync.fulfilled, (state, action)=>{
+        if (action.payload.status) {
+          state.err = { status: action.payload.status, data: action.payload.data }
         }
         else
           state.data = action.payload;

@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('donvi');
   },
+  getByClericalAssistant(){
+    return Api().get('donvi/dv');
+  },
   post(form) {
     return Api().post('donvi', form);
   },
