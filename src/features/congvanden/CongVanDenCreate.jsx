@@ -1,4 +1,8 @@
-import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInfoCircle,
+  faPlus,
+  faPlusSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Resizable } from "re-resizable";
 import { useEffect, useMemo, useState } from "react";
@@ -15,6 +19,9 @@ import {
   FormGroup,
   Input,
   Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
   Row,
   Tooltip,
 } from "reactstrap";
@@ -25,6 +32,8 @@ import {
   selectDVErr,
   resetErr as resetErrDV,
   getDataByClericalAssistantAsync,
+  selectDVAdd,
+  setAdd as setDVAdd,
 } from "../admin/donvi/donViSlice";
 import {
   createDataAsync,
@@ -59,12 +68,14 @@ import {
 import {
   getDataAsync as getTT,
   selectTTData,
-} from '../admin/trangthai/trangThaiSlice';
+} from "../admin/trangthai/trangThaiSlice";
+import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 
 function CongVanDenCreate() {
   const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
   const [tooltipSo, setToolTipSo] = useState(false);
+  const [tooltipBTN, setToolTipBTN] = useState(false);
   const [listPDF, setListPDF] = useState([]);
   const [pdf, setpdf] = useState(null);
   const dvPhatHanh = useSelector(selectDVData);
@@ -74,6 +85,7 @@ function CongVanDenCreate() {
   const dm = useSelector(selectDMData);
   const dk = useSelector(selectDKData);
   const tt = useSelector(selectTTData);
+  const addDV = useSelector(selectDVAdd);
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -186,15 +198,31 @@ function CongVanDenCreate() {
                       id="tt"
                     />
                   </Label>
-                  <ReactSelect
-                    options={dvPhatHanh}
-                    getOptionLabel={(option) => option.ten}
-                    getOptionValue={(option) => option._id}
-                    id="phathanh"
-                    name="phathanh"
-                    placeholder="Chọn đơn vị phát hành..."
-                    onChange={(e) => dispatch(onChangeFormDVPhatHanh(e._id))}
-                  />
+                  <Row>
+                    <Col sm={11}>
+                      <ReactSelect
+                        options={dvPhatHanh}
+                        getOptionLabel={(option) => option.ten}
+                        getOptionValue={(option) => option._id}
+                        id="phathanh"
+                        name="phathanh"
+                        placeholder="Chọn đơn vị phát hành..."
+                        onChange={(e) =>
+                          dispatch(onChangeFormDVPhatHanh(e._id))
+                        }
+                      />
+                    </Col>
+                    <Col sm={1}>
+                      <Button
+                        color="primary"
+                        className="w-100"
+                        id="btn"
+                        onClick={() => dispatch(setDVAdd(true))}
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </Button>
+                    </Col>
+                  </Row>
                 </FormGroup>
                 <FormGroup>
                   <Label for="nhan">
@@ -205,16 +233,37 @@ function CongVanDenCreate() {
                       id="tt"
                     />
                   </Label>
-                  <ReactSelect
-                    options={dvPhatHanh}
-                    getOptionLabel={(option) => option.ten}
-                    getOptionValue={(option) => option._id}
-                    isMulti
-                    id="nhan"
-                    name="nhan"
-                    placeholder="Chọn đơn vị nhận..."
-                    onChange={(e) => dispatch(onChangeFormDVNhan(e))}
-                  />
+                  <Row>
+                    <Col sm={11}>
+                      <ReactSelect
+                        options={dvPhatHanh}
+                        getOptionLabel={(option) => option.ten}
+                        getOptionValue={(option) => option._id}
+                        isMulti
+                        id="nhan"
+                        name="nhan"
+                        placeholder="Chọn đơn vị nhận..."
+                        onChange={(e) => dispatch(onChangeFormDVNhan(e))}
+                      />
+                    </Col>
+                    <Col sm={1}>
+                      <Button
+                        color="primary"
+                        className="w-100"
+                        id="btn"
+                        onClick={() => dispatch(setDVAdd(true))}
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </Button>
+                      <Tooltip
+                        target="btn"
+                        isOpen={tooltipBTN}
+                        toggle={() => setToolTipBTN(!tooltipBTN)}
+                      >
+                        Thêm đơn vị
+                      </Tooltip>
+                    </Col>
+                  </Row>
                 </FormGroup>
                 <FormGroup>
                   <Label for="loaicongvan">
@@ -482,6 +531,15 @@ function CongVanDenCreate() {
           </Card>
         </Col>
       </Row>
+      <Modal isOpen={addDV} size="xl">
+        <ModalHeader toggle={() => dispatch(setDVAdd(false))}>
+          <FontAwesomeIcon icon={faPlusSquare} className="mx-2" />
+          Thêm đơn vị mới
+        </ModalHeader>
+        <ModalBody>
+          <DonViBenNgoaiCreate />
+        </ModalBody>
+      </Modal>
     </Container>
   );
 }

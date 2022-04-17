@@ -52,6 +52,18 @@ export const createDataAsync = createAsyncThunk(
   }
 )
 
+export const createOtherDataAsync = createAsyncThunk(
+  'donvi/createotherdata',
+  async (form) => {
+    try {
+      const response = await api.postOther(form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const editDataAsync = createAsyncThunk(
   'donvi/editdata',
   async (form) => {
@@ -133,6 +145,22 @@ export const donViSlice = createSlice({
           state.data = action.payload;
       })
       .addCase(createDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.data.code) {
+            state.form.errEmail = "Email đơn vị bị trùng";
+          }
+          else if (action.payload.data.errors) {
+            state.form.errTen = action.payload.data.errors.ten?.message;
+            state.form.errEmail = action.payload.data.errors.email?.message;
+          }
+          else
+            state.form.errTen = "Lỗi server"
+        }
+        else
+          state.form.isSubmitted = true;
+      })
+      .addCase(createOtherDataAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
         if (action.payload.status) {
           if (action.payload.data.code) {
             state.form.errEmail = "Email đơn vị bị trùng";

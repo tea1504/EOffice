@@ -10,6 +10,9 @@ export default {
   post(form) {
     return Api().post('donvi', form);
   },
+  postOther(form) {
+    return Api().post('donvi/other', form);
+  },
   put(id, form) {
     return Api().put('donvi/' + id, form);
   },
