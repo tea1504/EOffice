@@ -121,8 +121,13 @@ export const congVanDenSlice = createSlice({
       state.form.trangthai = action.payload;
     },
     onChangeFormTapTin: (state, action) => {
-      console.log(action.payload);
       state.form.taptin = action.payload;
+    },
+    onChangeFormCBDuyet: (state, action) => {
+      state.form.cb_pheduyet = action.payload;
+    },
+    onChangeFormCBTrangThai: (state, action) => {
+      state.form.trangthai = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -135,6 +140,6 @@ export const congVanDenSlice = createSlice({
 
 export const selectCVDForm = state => state.cvd.form;
 
-export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, } = congVanDenSlice.actions;
+export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, } = congVanDenSlice.actions;
 
 export default congVanDenSlice.reducer;

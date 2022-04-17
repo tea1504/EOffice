@@ -37,6 +37,8 @@ import {
 } from "../admin/donvi/donViSlice";
 import {
   createDataAsync,
+  onChangeFormCBDuyet,
+  onChangeFormCBTrangThai,
   onChangeFormChucVuNguoiKy,
   onChangeFormDK,
   onChangeFormDM,
@@ -69,6 +71,7 @@ import {
   getDataAsync as getTT,
   selectTTData,
 } from "../admin/trangthai/trangThaiSlice";
+import { getDataLanhDaoAsync, selectCBData } from "../admin/canbo/canBoSlice";
 import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 
 function CongVanDenCreate() {
@@ -85,6 +88,7 @@ function CongVanDenCreate() {
   const dm = useSelector(selectDMData);
   const dk = useSelector(selectDKData);
   const tt = useSelector(selectTTData);
+  const cbld = useSelector(selectCBData);
   const addDV = useSelector(selectDVAdd);
 
   const handleInputFileOnChange = (e) => {
@@ -124,6 +128,7 @@ function CongVanDenCreate() {
     dispatch(getDM());
     dispatch(getDK());
     dispatch(getTT());
+    dispatch(getDataLanhDaoAsync());
     const yyyymmdd = (date) => {
       var mm = date.getMonth() + 1;
       var dd = date.getDate();
@@ -498,7 +503,14 @@ function CongVanDenCreate() {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <Label for="trangthai">Trạng thái</Label>
+                  <Label for="trangthai">
+                    Trạng thái
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="text-danger mx-1"
+                      id="tt"
+                    />
+                  </Label>
                   <ReactSelect
                     options={tt}
                     defaultValue={tt[0]}
@@ -507,7 +519,28 @@ function CongVanDenCreate() {
                     id="trangthai"
                     name="trangthai"
                     placeholder="Chọn trạng thái..."
-                    onChange={(e) => dispatch(onChangeFormDK(e._id))}
+                    onChange={(e) => dispatch(onChangeFormCBTrangThai(e._id))}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="cb_pheduyet">
+                    Chọn cán bộ duyệt
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="text-danger mx-1"
+                      id="tt"
+                    />
+                  </Label>
+                  <ReactSelect
+                    options={cbld}
+                    getOptionLabel={(option) =>
+                      option.ma + " | " + option.holot + " " + option.ten
+                    }
+                    getOptionValue={(option) => option._id}
+                    id="cb_pheduyet"
+                    name="cb_pheduyet"
+                    placeholder="Chọn cán bộ phê duyệt..."
+                    onChange={(e) => dispatch(onChangeFormCBDuyet(e._id))}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -520,6 +553,7 @@ function CongVanDenCreate() {
                 <FormGroup>
                   <ReactSelect
                     options={listPDF}
+                    placeholder="Chọn file muốn xem..."
                     onChange={(e) => setpdf(e.value)}
                   />
                 </FormGroup>

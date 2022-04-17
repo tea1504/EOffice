@@ -43,6 +43,18 @@ export const getDataAsync = createAsyncThunk(
   }
 )
 
+export const getDataLanhDaoAsync = createAsyncThunk(
+  'canbo/getdatalanhdao',
+  async () => {
+    try {
+      const response = await api.getLanhDao();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const createDataAsync = createAsyncThunk(
   'canbo/createdata',
   async (form) => {
@@ -183,6 +195,16 @@ export const canBoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
+      .addCase(getDataLanhDaoAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }

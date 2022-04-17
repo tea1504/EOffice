@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('canbo');
   },
+  getLanhDao() {
+    return Api().get('canbo/lanhdao');
+  },
   post(form) {
     return Api().post('canbo', form);
   },
