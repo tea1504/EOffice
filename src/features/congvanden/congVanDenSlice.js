@@ -46,6 +46,7 @@ const initialState = {
     errykien: null,
     errngayden: null,
     errtaptin: null,
+    isSubmitted: false,
   },
   err: null
 }
@@ -129,17 +130,89 @@ export const congVanDenSlice = createSlice({
     onChangeFormCBTrangThai: (state, action) => {
       state.form.trangthai = action.payload;
     },
+    resetFormErr: (state) => {
+      state.form.errchucvu_nguoiky = null;
+      state.form.errdokhan = null;
+      state.form.errdomat = null;
+      state.form.errdv_nhan = null;
+      state.form.errdv_phathanh = null;
+      state.form.errloaicongvan = null;
+      state.form.errngay = null;
+      state.form.errnguoiky = null;
+      state.form.errnoiluu = null;
+      state.form.errso = null;
+      state.form.errsoto = null;
+      state.form.errtaptin = null;
+      state.form.errtrangthai = null;
+      state.form.errtrichyeu = null;
+      state.form.errngayden = null;
+    },
+    resetForm: (state) => {
+      state.form.so= '';
+      state.form.dv_phathanh= '';
+      state.form.dv_nhan= [];
+      state.form.loaicongvan= '';
+      state.form.cb_nhap= '';
+      state.form.cb_pheduyet= '';
+      state.form.trangthai= '';
+      state.form.domat= '';
+      state.form.dokhan= '';
+      state.form.ngay= '';
+      state.form.hieuluc= '';
+      state.form.trichyeu= '';
+      state.form.nguoiky= '';
+      state.form.chucvu_nguoiky= '';
+      state.form.soto= '';
+      state.form.noiluu= '';
+      state.form.ghichu= '';
+      state.form.hangiaiquyet= '';
+      state.form.ykien= '';
+      state.form.ngayden= '';
+      state.form.taptin= [];
+      state.form.isSubmitted = false;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(createDataAsync.fulfilled, (state, action) => {
-        console.log(action);
+        if (action.payload.status) {
+          if (action.payload.data.code) {
+            //Lỗi unique
+            if (action.payload.data.keyPattern.so)
+              state.form.errso = action.payload.data.keyValue.so + " bị trùng";
+          }
+          else if (action.payload.data.errors) {
+            state.form.errchucvu_nguoiky = action.payload.data.errors.chucvu_nguoiky?.message;
+            state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
+            state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
+            state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
+            state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
+            state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
+            state.form.errngay = action.payload.data.errors.ngay?.message;
+            state.form.errnguoiky = action.payload.data.errors.nguoiky?.message;
+            state.form.errnoiluu = action.payload.data.errors.noiluu?.message;
+            state.form.errso = action.payload.data.errors.so?.message;
+            state.form.errsoto = action.payload.data.errors.soto?.message;
+            state.form.errtaptin = action.payload.data.errors.taptin?.message;
+            state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
+            state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
+            state.form.errngayden = action.payload.data.errors.ngayden?.message;
+          }
+          else
+            state.err = {
+              status: 500,
+              data: "Lỗi server"
+            }
+        }
+        else
+        state.form.isSubmitted = true;
       })
   }
 })
 
 export const selectCVDForm = state => state.cvd.form;
+export const selectCVDErr = state => state.cvd.err;
 
-export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, } = congVanDenSlice.actions;
+export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, } = congVanDenSlice.actions;
 
 export default congVanDenSlice.reducer;

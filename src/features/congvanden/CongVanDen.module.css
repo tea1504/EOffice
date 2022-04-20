@@ -1,0 +1,10 @@
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  box-shadow: 3px 3px 10px rgb(101, 85, 135);
+}

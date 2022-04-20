@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Resizable } from "re-resizable";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactSelect from "react-select";
 import {
@@ -16,6 +16,7 @@ import {
   Col,
   Container,
   Form,
+  FormFeedback,
   FormGroup,
   Input,
   Label,
@@ -56,6 +57,8 @@ import {
   onChangeFormSoTo,
   onChangeFormTapTin,
   onChangeFormTrichYeu,
+  resetForm,
+  resetFormErr,
   selectCVDForm,
 } from "./congVanDenSlice";
 import {
@@ -73,6 +76,8 @@ import {
 } from "../admin/trangthai/trangThaiSlice";
 import { getDataLanhDaoAsync, selectCBData } from "../admin/canbo/canBoSlice";
 import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
+import clsx from "clsx";
+import style from "./CongVanDen.module.css";
 
 function CongVanDenCreate() {
   const MySwal = withReactContent(Swal);
@@ -90,6 +95,7 @@ function CongVanDenCreate() {
   const tt = useSelector(selectTTData);
   const cbld = useSelector(selectCBData);
   const addDV = useSelector(selectDVAdd);
+  const refDVPhatHanh = useRef(null);
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -122,6 +128,7 @@ function CongVanDenCreate() {
         dispatch(resetErrDV());
       });
   }, [errDV]);
+
   useEffect(() => {
     dispatch(getDataByClericalAssistantAsync());
     dispatch(getLCV());
@@ -143,8 +150,25 @@ function CongVanDenCreate() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    dispatch(resetFormErr());
     dispatch(createDataAsync(form));
   };
+
+  useEffect(() => {
+    if (form.isSubmitted)
+      MySwal.fire({
+        title: <h1>Lưu thành công</h1>,
+        text: `Đã lưu công văn ${form.so} vào hệ thống`,
+        icon: "success",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(resetForm());
+        dispatch(resetFormErr());
+        console.log(refDVPhatHanh.current.value);
+        refDVPhatHanh.current.value = null;
+      });
+  }, [form.isSubmitted]);
+
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
@@ -163,7 +187,10 @@ function CongVanDenCreate() {
           </Resizable>
         )}
         <Col>
-          <Card style={{ height: "75vh", paddingBottom: "10px" }}>
+          <Card
+            style={{ height: "75vh", paddingBottom: "10px" }}
+            className={clsx(style.relative)}
+          >
             <CardHeader>
               <h4>Nhập thông tin</h4>
             </CardHeader>
@@ -192,7 +219,9 @@ function CongVanDenCreate() {
                     id="so"
                     name="so"
                     placeholder="Nhập số công văn..."
+                    invalid={form.errso != null}
                   />
+                  <FormFeedback>{form.errso}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="phathanh">
@@ -206,6 +235,7 @@ function CongVanDenCreate() {
                   <Row>
                     <Col sm={11}>
                       <ReactSelect
+                        ref={refDVPhatHanh}
                         options={dvPhatHanh}
                         getOptionLabel={(option) => option.ten}
                         getOptionValue={(option) => option._id}
@@ -215,7 +245,11 @@ function CongVanDenCreate() {
                         onChange={(e) =>
                           dispatch(onChangeFormDVPhatHanh(e._id))
                         }
+                        className={clsx({
+                          "is-invalid": form.errdv_phathanh != null,
+                        })}
                       />
+                      <FormFeedback>{form.errdv_phathanh}</FormFeedback>
                     </Col>
                     <Col sm={1}>
                       <Button
@@ -249,7 +283,11 @@ function CongVanDenCreate() {
                         name="nhan"
                         placeholder="Chọn đơn vị nhận..."
                         onChange={(e) => dispatch(onChangeFormDVNhan(e))}
+                        className={clsx({
+                          "is-invalid": form.errdv_nhan != null,
+                        })}
                       />
+                      <FormFeedback>{form.errdv_nhan}</FormFeedback>
                     </Col>
                     <Col sm={1}>
                       <Button
@@ -287,7 +325,11 @@ function CongVanDenCreate() {
                     name="loaicongvan"
                     placeholder="Chọn loại công văn..."
                     onChange={(e) => dispatch(onChangeFormLCV(e._id))}
+                    className={clsx({
+                      "is-invalid": form.errloaicongvan != null,
+                    })}
                   />
+                  <FormFeedback>{form.errloaicongvan}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="domat">
@@ -306,7 +348,9 @@ function CongVanDenCreate() {
                     name="domat"
                     placeholder="Chọn độ mật..."
                     onChange={(e) => dispatch(onChangeFormDM(e._id))}
+                    className={clsx({ "is-invalid": form.errdomat != null })}
                   />
+                  <FormFeedback>{form.errdomat}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="dokhan">
@@ -325,7 +369,9 @@ function CongVanDenCreate() {
                     name="dokhan"
                     placeholder="Chọn độ khẩn..."
                     onChange={(e) => dispatch(onChangeFormDK(e._id))}
+                    className={clsx({ "is-invalid": form.errdokhan != null })}
                   />
+                  <FormFeedback>{form.errdokhan}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="ngay">
@@ -342,7 +388,9 @@ function CongVanDenCreate() {
                     id="ngay"
                     name="ngay"
                     onChange={(e) => dispatch(onChangeFormNgay(e.target.value))}
+                    invalid={form.errngay != null}
                   />
+                  <FormFeedback>{form.errngay}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="hieuluc">Hiệu lực</Label>
@@ -375,7 +423,9 @@ function CongVanDenCreate() {
                     onChange={(e) =>
                       dispatch(onChangeFormTrichYeu(e.target.value))
                     }
+                    invalid={form.errtrichyeu != null}
                   />
+                  <FormFeedback>{form.errtrichyeu}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="nguoiky">
@@ -395,7 +445,9 @@ function CongVanDenCreate() {
                     onChange={(e) =>
                       dispatch(onChangeFormNGuoiKy(e.target.value))
                     }
+                    invalid={form.errnguoiky != null}
                   />
+                  <FormFeedback>{form.errnguoiky}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="cv_nguoiky">
@@ -415,7 +467,9 @@ function CongVanDenCreate() {
                     onChange={(e) =>
                       dispatch(onChangeFormChucVuNguoiKy(e.target.value))
                     }
+                    invalid={form.errchucvu_nguoiky != null}
                   />
+                  <FormFeedback>{form.errchucvu_nguoiky}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="soto">
@@ -434,7 +488,9 @@ function CongVanDenCreate() {
                     name="soto"
                     placeholder="Nhập số tờ..."
                     onChange={(e) => dispatch(onChangeFormSoTo(e.target.value))}
+                    invalid={form.errsoto != null}
                   />
+                  <FormFeedback>{form.errsoto}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="noiluu">
@@ -454,7 +510,9 @@ function CongVanDenCreate() {
                     onChange={(e) =>
                       dispatch(onChangeFormNoiLuu(e.target.value))
                     }
+                    invalid={form.errnoiluu != null}
                   />
+                  <FormFeedback>{form.errnoiluu}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="ghichu">Ghi chú</Label>
@@ -487,7 +545,9 @@ function CongVanDenCreate() {
                     onChange={(e) =>
                       dispatch(onChangeFormNgayDen(e.target.value))
                     }
+                    invalid={form.errngayden != null}
                   />
+                  <FormFeedback>{form.errngayden}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <Label for="hangiaiquyet">Hạn giải quyết</Label>
@@ -520,17 +580,14 @@ function CongVanDenCreate() {
                     name="trangthai"
                     placeholder="Chọn trạng thái..."
                     onChange={(e) => dispatch(onChangeFormCBTrangThai(e._id))}
+                    className={clsx({
+                      "is-invalid": form.errtrangthai != null,
+                    })}
                   />
+                  <FormFeedback>{form.errtrangthai}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
-                  <Label for="cb_pheduyet">
-                    Chọn cán bộ duyệt
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="text-danger mx-1"
-                      id="tt"
-                    />
-                  </Label>
+                  <Label for="cb_pheduyet">Chọn cán bộ duyệt</Label>
                   <ReactSelect
                     options={cbld}
                     getOptionLabel={(option) =>
@@ -544,11 +601,13 @@ function CongVanDenCreate() {
                   />
                 </FormGroup>
                 <FormGroup>
-                  <input
+                  <Input
                     type="file"
                     multiple
                     onChange={handleInputFileOnChange}
+                    invalid={form.errtaptin != null}
                   />
+                  <FormFeedback>{form.errtaptin}</FormFeedback>
                 </FormGroup>
                 <FormGroup>
                   <ReactSelect
@@ -557,9 +616,10 @@ function CongVanDenCreate() {
                     onChange={(e) => setpdf(e.value)}
                   />
                 </FormGroup>
-                <FormGroup>
-                  <Button>Lưu</Button>
-                </FormGroup>
+                <br />
+                <Button color="primary" className={clsx(style.absolute)}>
+                  Lưu công văn
+                </Button>
               </Form>
             </CardBody>
           </Card>
