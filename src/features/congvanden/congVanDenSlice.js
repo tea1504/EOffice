@@ -51,6 +51,18 @@ const initialState = {
   err: null
 }
 
+export const getDataAsync = createAsyncThunk(
+  'congvanden/getdata',
+  async () => {
+    try {
+      const response = await api.get();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const createDataAsync = createAsyncThunk(
   'congvanden/createdata',
   async (form) => {
@@ -148,32 +160,42 @@ export const congVanDenSlice = createSlice({
       state.form.errngayden = null;
     },
     resetForm: (state) => {
-      state.form.so= '';
-      state.form.dv_phathanh= '';
-      state.form.dv_nhan= [];
-      state.form.loaicongvan= '';
-      state.form.cb_nhap= '';
-      state.form.cb_pheduyet= '';
-      state.form.trangthai= '';
-      state.form.domat= '';
-      state.form.dokhan= '';
-      state.form.ngay= '';
-      state.form.hieuluc= '';
-      state.form.trichyeu= '';
-      state.form.nguoiky= '';
-      state.form.chucvu_nguoiky= '';
-      state.form.soto= '';
-      state.form.noiluu= '';
-      state.form.ghichu= '';
-      state.form.hangiaiquyet= '';
-      state.form.ykien= '';
-      state.form.ngayden= '';
-      state.form.taptin= [];
+      state.form.so = '';
+      state.form.dv_phathanh = '';
+      state.form.dv_nhan = [];
+      state.form.loaicongvan = '';
+      state.form.cb_nhap = '';
+      state.form.cb_pheduyet = '';
+      state.form.trangthai = '';
+      state.form.domat = '';
+      state.form.dokhan = '';
+      state.form.ngay = '';
+      state.form.hieuluc = '';
+      state.form.trichyeu = '';
+      state.form.nguoiky = '';
+      state.form.chucvu_nguoiky = '';
+      state.form.soto = '';
+      state.form.noiluu = '';
+      state.form.ghichu = '';
+      state.form.hangiaiquyet = '';
+      state.form.ykien = '';
+      state.form.ngayden = '';
+      state.form.taptin = [];
       state.form.isSubmitted = false;
     }
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
       .addCase(createDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.data.code) {
@@ -205,12 +227,13 @@ export const congVanDenSlice = createSlice({
             }
         }
         else
-        state.form.isSubmitted = true;
+          state.form.isSubmitted = true;
       })
   }
 })
 
 export const selectCVDForm = state => state.cvd.form;
+export const selectCVDData = state => state.cvd.data;
 export const selectCVDErr = state => state.cvd.err;
 
 export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, } = congVanDenSlice.actions;

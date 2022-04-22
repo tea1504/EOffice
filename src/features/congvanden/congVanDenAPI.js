@@ -2,7 +2,7 @@ import Api from "../../app/api";
 
 export default {
   get() {
-    return Api().get('congvanden');
+    return Api().get('congvanden/full');
   },
   post(form) {
     var formData = new FormData();

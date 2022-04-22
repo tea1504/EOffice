@@ -83,6 +83,8 @@ function CongVanDenCreate() {
   const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
   const [tooltipSo, setToolTipSo] = useState(false);
+  const [tooltipDM, setToolTipDM] = useState(false);
+  const [tooltipDK, setToolTipDK] = useState(false);
   const [tooltipBTN, setToolTipBTN] = useState(false);
   const [listPDF, setListPDF] = useState([]);
   const [pdf, setpdf] = useState(null);
@@ -96,6 +98,12 @@ function CongVanDenCreate() {
   const cbld = useSelector(selectCBData);
   const addDV = useSelector(selectDVAdd);
   const refDVPhatHanh = useRef(null);
+  const refDVNhan = useRef(null);
+  const refLCV = useRef(null);
+  const refDM = useRef(null);
+  const refDK = useRef(null);
+  const refCBPD = useRef(null);
+  const refFile = useRef(null);
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -148,6 +156,10 @@ function CongVanDenCreate() {
     dispatch(onChangeFormNgayDen(yyyymmdd(new Date())));
   }, []);
 
+  useEffect(() => {
+    if (tt.length > 0) dispatch(onChangeFormCBTrangThai(tt[0]._id));
+  }, [tt]);
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     dispatch(resetFormErr());
@@ -164,10 +176,37 @@ function CongVanDenCreate() {
       }).then(() => {
         dispatch(resetForm());
         dispatch(resetFormErr());
-        console.log(refDVPhatHanh.current.value);
-        refDVPhatHanh.current.value = null;
+        refDVPhatHanh.current.clearValue();
+        refDVNhan.current.clearValue();
+        refLCV.current.clearValue();
+        refDM.current.clearValue();
+        refDK.current.clearValue();
+        refCBPD.current.clearValue();
+        refFile.current.clearValue();
+        dispatch(onChangeFormCBTrangThai(tt[0]._id));
       });
   }, [form.isSubmitted]);
+
+  const renderTrangThai = () => {
+    return (
+      <FormGroup row>
+        {tt.map((el, ind) => {
+          return (
+            <Col key={"tt" + ind}>
+              <Input
+                type="radio"
+                name="tt"
+                id={"tt_" + el._id}
+                checked={form.trangthai === el._id}
+                onChange={() => dispatch(onChangeFormCBTrangThai(el._id))}
+              />{" "}
+              <Label for={"tt_" + el._id}>{el.ten}</Label>
+            </Col>
+          );
+        })}
+      </FormGroup>
+    );
+  };
 
   return (
     <Container fluid className="my-3 px-5">
@@ -196,6 +235,7 @@ function CongVanDenCreate() {
             </CardHeader>
             <CardBody style={{ height: "60vh", overflow: "auto" }}>
               <Form inline onSubmit={handleFormSubmit}>
+                {/* so */}
                 <FormGroup>
                   <Label for="so">
                     Số công văn
@@ -223,6 +263,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errso}</FormFeedback>
                 </FormGroup>
+                {/* phathanh */}
                 <FormGroup>
                   <Label for="phathanh">
                     Đơn vị phát hành
@@ -237,17 +278,33 @@ function CongVanDenCreate() {
                       <ReactSelect
                         ref={refDVPhatHanh}
                         options={dvPhatHanh}
+                        isClearable
                         getOptionLabel={(option) => option.ten}
                         getOptionValue={(option) => option._id}
                         id="phathanh"
                         name="phathanh"
                         placeholder="Chọn đơn vị phát hành..."
-                        onChange={(e) =>
-                          dispatch(onChangeFormDVPhatHanh(e._id))
-                        }
+                        onChange={(e) => {
+                          if (!e) {
+                            e = {
+                              target: refDVPhatHanh,
+                              value: "",
+                            };
+                            dispatch(onChangeFormDVPhatHanh(""));
+                          } else dispatch(onChangeFormDVPhatHanh(e._id));
+                        }}
                         className={clsx({
                           "is-invalid": form.errdv_phathanh != null,
                         })}
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            borderColor:
+                              form.errdv_phathanh != null
+                                ? "#dc3545"
+                                : "hsl(0, 0%, 80%)",
+                          }),
+                        }}
                       />
                       <FormFeedback>{form.errdv_phathanh}</FormFeedback>
                     </Col>
@@ -263,6 +320,7 @@ function CongVanDenCreate() {
                     </Col>
                   </Row>
                 </FormGroup>
+                {/* nhan */}
                 <FormGroup>
                   <Label for="nhan">
                     Đơn vị nhận
@@ -275,10 +333,12 @@ function CongVanDenCreate() {
                   <Row>
                     <Col sm={11}>
                       <ReactSelect
+                        ref={refDVNhan}
                         options={dvPhatHanh}
                         getOptionLabel={(option) => option.ten}
                         getOptionValue={(option) => option._id}
                         isMulti
+                        isClearable
                         id="nhan"
                         name="nhan"
                         placeholder="Chọn đơn vị nhận..."
@@ -286,6 +346,15 @@ function CongVanDenCreate() {
                         className={clsx({
                           "is-invalid": form.errdv_nhan != null,
                         })}
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            borderColor:
+                              form.errdv_nhan != null
+                                ? "#dc3545"
+                                : "hsl(0, 0%, 80%)",
+                          }),
+                        }}
                       />
                       <FormFeedback>{form.errdv_nhan}</FormFeedback>
                     </Col>
@@ -308,6 +377,7 @@ function CongVanDenCreate() {
                     </Col>
                   </Row>
                 </FormGroup>
+                {/* loaicv */}
                 <FormGroup>
                   <Label for="loaicongvan">
                     Loại công văn
@@ -318,61 +388,117 @@ function CongVanDenCreate() {
                     />
                   </Label>
                   <ReactSelect
+                    ref={refLCV}
                     options={lcv}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
                     id="loaicongvan"
                     name="loaicongvan"
+                    isClearable
                     placeholder="Chọn loại công văn..."
-                    onChange={(e) => dispatch(onChangeFormLCV(e._id))}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refLCV,
+                          value: "",
+                        };
+                        dispatch(onChangeFormLCV(""));
+                      } else dispatch(onChangeFormLCV(e._id));
+                    }}
                     className={clsx({
                       "is-invalid": form.errloaicongvan != null,
                     })}
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor:
+                          form.errloaicongvan != null
+                            ? "#dc3545"
+                            : "hsl(0, 0%, 80%)",
+                      }),
+                    }}
                   />
                   <FormFeedback>{form.errloaicongvan}</FormFeedback>
                 </FormGroup>
+                {/* domat */}
                 <FormGroup>
                   <Label for="domat">
                     Độ mật
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="text-danger mx-1"
-                      id="tt"
+                      id="dmtt"
                     />
+                    <Tooltip
+                      isOpen={tooltipDM}
+                      target="dmtt"
+                      toggle={() => setToolTipDM(!tooltipDM)}
+                    >
+                      Để trống nếu không mật
+                    </Tooltip>
                   </Label>
                   <ReactSelect
+                    ref={refDM}
                     options={dm}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
+                    isClearable
                     id="domat"
                     name="domat"
                     placeholder="Chọn độ mật..."
-                    onChange={(e) => dispatch(onChangeFormDM(e._id))}
-                    className={clsx({ "is-invalid": form.errdomat != null })}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refDM,
+                          value: "",
+                        };
+                        dispatch(onChangeFormDM(""));
+                      }
+                      dispatch(onChangeFormDM(e._id));
+                    }}
                   />
                   <FormFeedback>{form.errdomat}</FormFeedback>
                 </FormGroup>
+                {/* dokhan */}
                 <FormGroup>
                   <Label for="dokhan">
                     Độ khẩn
                     <FontAwesomeIcon
                       icon={faInfoCircle}
                       className="text-danger mx-1"
-                      id="tt"
+                      id="dktt"
                     />
+                    <Tooltip
+                      isOpen={tooltipDK}
+                      target="dktt"
+                      toggle={() => setToolTipDK(!tooltipDK)}
+                    >
+                      Để trống nếu không khẩn
+                    </Tooltip>
                   </Label>
                   <ReactSelect
+                    ref={refDK}
                     options={dk}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
+                    isClearable
                     id="dokhan"
                     name="dokhan"
                     placeholder="Chọn độ khẩn..."
-                    onChange={(e) => dispatch(onChangeFormDK(e._id))}
-                    className={clsx({ "is-invalid": form.errdokhan != null })}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refDK,
+                          value: "",
+                        };
+                        dispatch(onChangeFormDK(""));
+                      }
+                      dispatch(onChangeFormDK(e._id));
+                    }}
                   />
                   <FormFeedback>{form.errdokhan}</FormFeedback>
                 </FormGroup>
+                {/* ngay */}
                 <FormGroup>
                   <Label for="ngay">
                     Ngày
@@ -392,6 +518,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errngay}</FormFeedback>
                 </FormGroup>
+                {/* hieuluc */}
                 <FormGroup>
                   <Label for="hieuluc">Hiệu lực</Label>
                   <Input
@@ -405,6 +532,7 @@ function CongVanDenCreate() {
                     }
                   />
                 </FormGroup>
+                {/* Trích yếu */}
                 <FormGroup>
                   <Label for="trichyeu">
                     Trích yếu
@@ -427,6 +555,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errtrichyeu}</FormFeedback>
                 </FormGroup>
+                {/* nguoiky */}
                 <FormGroup>
                   <Label for="nguoiky">
                     Họ tên người ký
@@ -449,6 +578,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errnguoiky}</FormFeedback>
                 </FormGroup>
+                {/* cv_nguoiky */}
                 <FormGroup>
                   <Label for="cv_nguoiky">
                     Chức vụ người ký
@@ -471,6 +601,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errchucvu_nguoiky}</FormFeedback>
                 </FormGroup>
+                {/* soto */}
                 <FormGroup>
                   <Label for="soto">
                     Số tờ
@@ -492,6 +623,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errsoto}</FormFeedback>
                 </FormGroup>
+                {/* noiluu */}
                 <FormGroup>
                   <Label for="noiluu">
                     Nơi lưu
@@ -514,6 +646,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errnoiluu}</FormFeedback>
                 </FormGroup>
+                {/* ghichu */}
                 <FormGroup>
                   <Label for="ghichu">Ghi chú</Label>
                   <Input
@@ -527,6 +660,7 @@ function CongVanDenCreate() {
                     }
                   />
                 </FormGroup>
+                {/* ngayden */}
                 <FormGroup>
                   <Label for="ngayden">
                     Ngày đến
@@ -549,6 +683,7 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errngayden}</FormFeedback>
                 </FormGroup>
+                {/* hangiaiquyet */}
                 <FormGroup>
                   <Label for="hangiaiquyet">Hạn giải quyết</Label>
                   <Input
@@ -562,6 +697,7 @@ function CongVanDenCreate() {
                     }
                   />
                 </FormGroup>
+                {/* trangthai */}
                 <FormGroup>
                   <Label for="trangthai">
                     Trạng thái
@@ -571,35 +707,36 @@ function CongVanDenCreate() {
                       id="tt"
                     />
                   </Label>
-                  <ReactSelect
-                    options={tt}
-                    defaultValue={tt[0]}
-                    getOptionLabel={(option) => option.ten}
-                    getOptionValue={(option) => option._id}
-                    id="trangthai"
-                    name="trangthai"
-                    placeholder="Chọn trạng thái..."
-                    onChange={(e) => dispatch(onChangeFormCBTrangThai(e._id))}
-                    className={clsx({
-                      "is-invalid": form.errtrangthai != null,
-                    })}
-                  />
+                  {renderTrangThai()}
                   <FormFeedback>{form.errtrangthai}</FormFeedback>
                 </FormGroup>
+                {/* CBDuyet */}
                 <FormGroup>
                   <Label for="cb_pheduyet">Chọn cán bộ duyệt</Label>
                   <ReactSelect
+                    ref={refCBPD}
                     options={cbld}
                     getOptionLabel={(option) =>
                       option.ma + " | " + option.holot + " " + option.ten
                     }
+                    isClearable
                     getOptionValue={(option) => option._id}
                     id="cb_pheduyet"
                     name="cb_pheduyet"
                     placeholder="Chọn cán bộ phê duyệt..."
-                    onChange={(e) => dispatch(onChangeFormCBDuyet(e._id))}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refCBPD,
+                          value: "",
+                        };
+                        dispatch(onChangeFormCBDuyet(e._id));
+                      }
+                      dispatch(onChangeFormCBDuyet(e._id));
+                    }}
                   />
                 </FormGroup>
+                {/* Chon file */}
                 <FormGroup>
                   <Input
                     type="file"
@@ -609,11 +746,22 @@ function CongVanDenCreate() {
                   />
                   <FormFeedback>{form.errtaptin}</FormFeedback>
                 </FormGroup>
+                {/* Xem file */}
                 <FormGroup>
                   <ReactSelect
+                    ref={refFile}
                     options={listPDF}
+                    isClearable
                     placeholder="Chọn file muốn xem..."
-                    onChange={(e) => setpdf(e.value)}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refFile,
+                          value: "",
+                        };
+                        setpdf(null);
+                      } else setpdf(e.value);
+                    }}
                   />
                 </FormGroup>
                 <br />
