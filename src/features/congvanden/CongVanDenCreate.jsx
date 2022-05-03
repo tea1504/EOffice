@@ -138,6 +138,7 @@ function CongVanDenCreate() {
   }, [errDV]);
 
   useEffect(() => {
+    dispatch(resetForm());
     dispatch(getDataByClericalAssistantAsync());
     dispatch(getLCV());
     dispatch(getDM());

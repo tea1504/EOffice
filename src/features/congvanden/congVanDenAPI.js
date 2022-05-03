@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('congvanden/full');
   },
+  getDetail(id) {
+    return Api().get('congvanden/full/' + id);
+  },
   post(form) {
     var formData = new FormData();
     for (const [key, value] of Object.entries(form)) {

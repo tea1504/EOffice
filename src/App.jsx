@@ -21,6 +21,7 @@ import DonVi from "./features/admin/donvi/DonVi";
 import CanBo from "./features/admin/canbo/CanBo";
 import CongVanDen from "./features/congvanden/CongVanDen";
 import CongVanDenCreate from "./features/congvanden/CongVanDenCreate";
+import CongVanDenDetail from "./features/congvanden/CongVanDenDetail";
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ function App() {
             <Route path="congvanden">
               <Route path="" element={<CongVanDen />} />
               <Route path="them" element={<CongVanDenCreate />} />
+              <Route path=":id" element={<CongVanDenDetail />} />
             </Route>
           </Route>
           <Route path="*" element={<Page404 />} />

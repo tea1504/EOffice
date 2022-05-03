@@ -63,6 +63,18 @@ export const getDataAsync = createAsyncThunk(
   }
 )
 
+export const getDetailDataAsync = createAsyncThunk(
+  'congvanden/getdetaildata',
+  async (id) => {
+    try {
+      const response = await api.getDetail(id);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const createDataAsync = createAsyncThunk(
   'congvanden/createdata',
   async (form) => {
@@ -195,6 +207,16 @@ export const congVanDenSlice = createSlice({
         }
         else
           state.data = action.payload;
+      })
+      .addCase(getDetailDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.form = action.payload;
       })
       .addCase(createDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {

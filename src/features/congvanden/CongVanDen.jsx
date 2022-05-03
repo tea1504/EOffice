@@ -24,8 +24,8 @@ import {
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../app/datatableConfig";
+import conditionalRowStyles from "../congvan/conditionalRowStyles";
 import { selectUserVanThu } from "../user/userSlice";
-import conditionalRowStyles from "./conditionalRowStyles";
 import { getDataAsync, selectCVDData } from "./congVanDenSlice";
 
 const ActionButton = ({ data }) => {
@@ -34,8 +34,11 @@ const ActionButton = ({ data }) => {
   const [tooltipXem, setTooltipXem] = useState(false);
   const [tooltipEdit, setTooltipEdit] = useState(false);
   const [tooltipDel, setTooltipDel] = useState(false);
+  const navigate = useNavigate();
 
-  const handleXemButtonClick = () => {};
+  const handleXemButtonClick = () => {
+    navigate("./cong-van-den-so-" + data.so + "." + data._id);
+  };
 
   const handleEditButtonClick = () => {};
 
@@ -123,6 +126,7 @@ function CongVanDen() {
       name: "Số công văn",
       selector: (row) => row.so,
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: "Đơn vị phát hành",
@@ -130,19 +134,10 @@ function CongVanDen() {
       sortable: true,
     },
     {
-      name: "Độ mật",
-      selector: (row) => row.domat?.ten,
-      sortable: true,
-    },
-    {
-      name: "Độ khẩn",
-      selector: (row) => row.dokhan?.ten,
-      sortable: true,
-    },
-    {
       name: "Trạng thái",
       selector: (row) => row.trangthai.ten,
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: "Ngày đến",
@@ -152,6 +147,7 @@ function CongVanDen() {
         return d.toLocaleDateString("vi-VN", options);
       },
       sortable: true,
+      maxWidth: '150px',
     },
     {
       name: "Trích yếu",
@@ -169,8 +165,16 @@ function CongVanDen() {
   const dispatch = useDispatch();
   const [filterText, setFilterText] = useState("");
   const navigate = useNavigate();
-  const filterItem = data.filter((item) => item);
-  const handleClear = () => {};
+  const filterItem = data.filter(
+    (item) =>
+      item.so.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.dv_phathanh.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.trangthai.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.trichyeu.toLowerCase().includes(filterText.toLowerCase())
+  );
+  const handleClear = () => {
+    setFilterText("");
+  };
   const handleAddButtonClick = () => {
     navigate("./them");
   };
