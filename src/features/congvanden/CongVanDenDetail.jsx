@@ -104,14 +104,14 @@ function CongVanDenDetail() {
                     <th>Số công văn</th>
                     <td colSpan={2}>{form.so}</td>
                     <th>Loại công văn</th>
-                    <td colSpan={2}>{form.loaicongvan.ten}</td>
+                    <td colSpan={2}>{form.loaicongvan?.ten}</td>
                   </tr>
                   <tr>
                     <th>Đơn vị phát hành</th>
-                    <td colSpan={2}>{form.dv_phathanh.ten}</td>
+                    <td colSpan={2}>{form.dv_phathanh?.ten}</td>
                     <th>Đơn vị nhận</th>
                     <td colSpan={2}>
-                      {form.dv_nhan.map((el, ind) => {
+                      {form.dv_nhan?.map((el, ind) => {
                         return (
                           <div key={ind}>
                             {el.ten}
@@ -124,11 +124,11 @@ function CongVanDenDetail() {
                   <tr>
                     <th>Cán bộ nhập</th>
                     <td colSpan={5}>
-                      {form.cb_nhap.ma +
+                      {form.cb_nhap?.ma +
                         " | " +
-                        form.cb_nhap.holot +
+                        form.cb_nhap?.holot +
                         " " +
-                        form.cb_nhap.ten}
+                        form.cb_nhap?.ten}
                     </td>
                   </tr>
                   <tr>
@@ -157,7 +157,7 @@ function CongVanDenDetail() {
                   </tr>
                   <tr>
                     <th width="15%">Trạng thái</th>
-                    <td width="18%">{form.trangthai.ten}</td>
+                    <td width="18%">{form.trangthai?.ten}</td>
                     <th width="15%">Độ mật</th>
                     <td width="18%">{form.domat?.ten}</td>
                     <th width="15%">Độ khẩn</th>

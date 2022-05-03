@@ -26,7 +26,7 @@ import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../app/datatableConfig";
 import conditionalRowStyles from "../congvan/conditionalRowStyles";
 import { selectUserLanhDao, selectUserVanThu } from "../user/userSlice";
-import { getDataAsync, selectCVDData } from "./congVanDenSlice";
+import { deleteDataAsync, getDataAsync, selectCVDData } from "./congVanDenSlice";
 
 const ActionButton = ({ data }) => {
   const MySwal = withReactContent(Swal);
@@ -55,9 +55,9 @@ const ActionButton = ({ data }) => {
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        // dispatch(deleteDataAsync(data._id));
-        // dispatch(getDataAsync());
-        MySwal.fire("Đã xóa!", `Đã xóa ${data.ten} khỏi hệ thống`, "success");
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire("Đã xóa!", `Đã xóa công văn số ${data.so} khỏi hệ thống`, "success");
       } else if (
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel

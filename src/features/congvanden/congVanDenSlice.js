@@ -87,6 +87,18 @@ export const createDataAsync = createAsyncThunk(
   }
 )
 
+export const deleteDataAsync = createAsyncThunk(
+  'congvanden/deletedata',
+  async (id) => {
+    try {
+      const response = await api.delete(id);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const congVanDenSlice = createSlice({
   name: 'congvanden',
   initialState,
@@ -250,6 +262,14 @@ export const congVanDenSlice = createSlice({
         }
         else
           state.form.isSubmitted = true;
+      })
+      .addCase(deleteDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
       })
   }
 })
