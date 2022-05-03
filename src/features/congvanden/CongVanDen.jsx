@@ -25,7 +25,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../app/datatableConfig";
 import conditionalRowStyles from "../congvan/conditionalRowStyles";
-import { selectUserVanThu } from "../user/userSlice";
+import { selectUserLanhDao, selectUserVanThu } from "../user/userSlice";
 import { getDataAsync, selectCVDData } from "./congVanDenSlice";
 
 const ActionButton = ({ data }) => {
@@ -35,6 +35,8 @@ const ActionButton = ({ data }) => {
   const [tooltipEdit, setTooltipEdit] = useState(false);
   const [tooltipDel, setTooltipDel] = useState(false);
   const navigate = useNavigate();
+  const laVanThu = useSelector(selectUserVanThu);
+  const laLanhDao = useSelector(selectUserLanhDao);
 
   const handleXemButtonClick = () => {
     navigate("./cong-van-den-so-" + data.so + "." + data._id);
@@ -81,34 +83,38 @@ const ActionButton = ({ data }) => {
       >
         Xem chi tiết
       </Tooltip>
-      <Button
-        className="btn-neutral mx-1"
-        id="btnEdit"
-        onClick={handleEditButtonClick}
-      >
-        <FontAwesomeIcon icon={faEdit} />
-      </Button>
-      <Tooltip
-        target="btnEdit"
-        isOpen={tooltipEdit}
-        toggle={() => setTooltipEdit(!tooltipEdit)}
-      >
-        Chỉnh sửa
-      </Tooltip>
-      <Button
-        className="btn-neutral mx-1"
-        id="btnDel"
-        onClick={() => handleDeleteButtonClick(data)}
-      >
-        <FontAwesomeIcon icon={faTrash} className="text-danger" />
-      </Button>
-      <Tooltip
-        target="btnDel"
-        isOpen={tooltipDel}
-        toggle={() => setTooltipDel(!tooltipDel)}
-      >
-        Xóa
-      </Tooltip>
+      {(laVanThu||laLanhDao) && (
+        <>
+          <Button
+            className="btn-neutral mx-1"
+            id="btnEdit"
+            onClick={handleEditButtonClick}
+          >
+            <FontAwesomeIcon icon={faEdit} />
+          </Button>
+          <Tooltip
+            target="btnEdit"
+            isOpen={tooltipEdit}
+            toggle={() => setTooltipEdit(!tooltipEdit)}
+          >
+            Chỉnh sửa
+          </Tooltip>
+          <Button
+            className="btn-neutral mx-1"
+            id="btnDel"
+            onClick={() => handleDeleteButtonClick(data)}
+          >
+            <FontAwesomeIcon icon={faTrash} className="text-danger" />
+          </Button>
+          <Tooltip
+            target="btnDel"
+            isOpen={tooltipDel}
+            toggle={() => setTooltipDel(!tooltipDel)}
+          >
+            Xóa
+          </Tooltip>
+        </>
+      )}
     </>
   );
 };
@@ -126,7 +132,7 @@ function CongVanDen() {
       name: "Số công văn",
       selector: (row) => row.so,
       sortable: true,
-      maxWidth: '150px',
+      maxWidth: "150px",
     },
     {
       name: "Đơn vị phát hành",
@@ -137,7 +143,7 @@ function CongVanDen() {
       name: "Trạng thái",
       selector: (row) => row.trangthai.ten,
       sortable: true,
-      maxWidth: '150px',
+      maxWidth: "150px",
     },
     {
       name: "Ngày đến",
@@ -147,7 +153,7 @@ function CongVanDen() {
         return d.toLocaleDateString("vi-VN", options);
       },
       sortable: true,
-      maxWidth: '150px',
+      maxWidth: "150px",
     },
     {
       name: "Trích yếu",

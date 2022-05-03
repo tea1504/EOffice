@@ -70,7 +70,18 @@ function CongVanDenDetail() {
                 >
                   <FontAwesomeIcon icon={faEye} className="text-primary" />
                 </Button>{" "}
-                <a className="btn btn-neutral">
+                <a
+                  className="btn btn-neutral"
+                  href={
+                    process.env.REACT_APP_BASE_API_DOWNLOAD_CVD +
+                    form._id +
+                    "/file/" +
+                    el.path +
+                    "?token=" +
+                    token
+                  }
+                  target="_blank"
+                >
                   <FontAwesomeIcon icon={faDownload} className="text-success" />
                 </a>
               </td>
@@ -201,9 +212,13 @@ function CongVanDenDetail() {
           <Card>
             <CardBody>
               <ul>
-                {form.xuly.map((el) => (
+                {form.xuly?.map((el) => (
                   <li key={el._id}>
-                    {formatDateTime(el.thoigian) + ": " + el.canbo?.ma + " | " + el.noidung}
+                    {formatDateTime(el.thoigian) +
+                      ": " +
+                      el.canbo?.ma +
+                      " | " +
+                      el.noidung}
                   </li>
                 ))}
               </ul>
