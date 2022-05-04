@@ -69,12 +69,7 @@ function CongVanDenDetail() {
                 <a
                   className="btn btn-neutral"
                   href={
-                    process.env.REACT_APP_BASE_API_DOWNLOAD_CVD +
-                    form._id +
-                    "/file/" +
-                    el.path +
-                    "?token=" +
-                    token
+                    `${process.env.REACT_APP_BASE_API_DOWNLOAD_CVD}${form._id}/file/${el.path}?token=${token}`
                   }
                   target="_blank"
                 >
