@@ -37,7 +37,9 @@ import {
   setAdd as setDVAdd,
 } from "../admin/donvi/donViSlice";
 import {
-  createDataAsync,
+  editDataAsync,
+  formatDate,
+  getDetailDataAsync,
   onChangeFormCBDuyet,
   onChangeFormCBTrangThai,
   onChangeFormChucVuNguoiKy,
@@ -59,6 +61,7 @@ import {
   onChangeFormTrichYeu,
   resetForm,
   resetFormErr,
+  resetTapTin,
   selectCVDForm,
 } from "./congVanDenSlice";
 import {
@@ -79,8 +82,11 @@ import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 import clsx from "clsx";
 import style from "./CongVanDen.module.css";
 import { selectUserDonVi } from "../user/userSlice";
+import { useParams } from "react-router-dom";
 
-function CongVanDenCreate() {
+function CongVanDenEdit() {
+  const { id } = useParams();
+  const _id = id.split(".")[1];
   const MySwal = withReactContent(Swal);
   const dispatch = useDispatch();
   const [tooltipSo, setToolTipSo] = useState(false);
@@ -105,7 +111,6 @@ function CongVanDenCreate() {
   const refDK = useRef(null);
   const refCBPD = useRef(null);
   const refFile = useRef(null);
-  const donViUser = useSelector(selectUserDonVi);
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -140,27 +145,27 @@ function CongVanDenCreate() {
   }, [errDV]);
 
   useEffect(() => {
-    dispatch(resetForm());
     dispatch(getDataByClericalAssistantAsync());
     dispatch(getLCV());
     dispatch(getDM());
     dispatch(getDK());
     dispatch(getTT());
     dispatch(getDataLanhDaoAsync());
-    const yyyymmdd = (date) => {
-      var mm = date.getMonth() + 1;
-      var dd = date.getDate();
-      return [
-        date.getFullYear(),
-        (mm > 9 ? "" : "0") + mm,
-        (dd > 9 ? "" : "0") + dd,
-      ].join("-");
-    };
-    dispatch(onChangeFormNgayDen(yyyymmdd(new Date())));
-    dispatch(onChangeFormDVNhan(dvPhatHanh.filter(
-      (el) => el._id == donViUser
-    )))
+    dispatch(resetForm());
+    dispatch(getDetailDataAsync(_id));
   }, []);
+
+  useEffect(()=>{
+    dispatch(formatDate());
+    dispatch(resetTapTin());
+    refDVPhatHanh.current.setValue(form.dv_phathanh);
+    refDVNhan.current.setValue(form.dv_nhan);
+    refLCV.current.setValue(form.loaicongvan);
+    refDM.current.setValue(form.domat);
+    refDK.current.setValue(form.dokhan);
+    refCBPD.current.setValue(form.cb_pheduyet);
+    console.log(form);
+  }, [form._id]);
 
   useEffect(() => {
     if (tt.length > 0) dispatch(onChangeFormCBTrangThai(tt[0]._id));
@@ -169,7 +174,7 @@ function CongVanDenCreate() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     dispatch(resetFormErr());
-    dispatch(createDataAsync(form));
+    dispatch(editDataAsync(form));
   };
 
   useEffect(() => {
@@ -180,20 +185,33 @@ function CongVanDenCreate() {
         icon: "success",
         footer: "EOffice &copy; 2022",
       }).then(() => {
-        dispatch(resetForm());
         dispatch(resetFormErr());
-        refDVPhatHanh.current.clearValue();
-        refDVNhan.current.clearValue();
-        refLCV.current.clearValue();
-        refDM.current.clearValue();
-        refDK.current.clearValue();
-        refCBPD.current.clearValue();
-        refFile.current.clearValue();
-        dispatch(onChangeFormCBTrangThai(tt[0]._id));
+        dispatch(resetForm());
+        dispatch(getDetailDataAsync(_id));
       });
   }, [form.isSubmitted]);
 
   const renderTrangThai = () => {
+    if(form.trangthai._id)
+    return (
+      <FormGroup row>
+        {tt.map((el, ind) => {
+          return (
+            <Col key={"tt" + ind}>
+              <Input
+                type="radio"
+                name="tt"
+                id={"tt_" + el._id}
+                checked={form.trangthai._id === el._id}
+                onChange={() => dispatch(onChangeFormCBTrangThai(el._id))}
+              />{" "}
+              <Label for={"tt_" + el._id}>{el.ten}</Label>
+            </Col>
+          );
+        })}
+      </FormGroup>
+    );
+    else
     return (
       <FormGroup row>
         {tt.map((el, ind) => {
@@ -218,7 +236,7 @@ function CongVanDenCreate() {
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
         <Col md={12} className="mb-2">
-          <h2>Thêm công văn đến</h2>
+          <h2>Cập nhật công văn đến</h2>
         </Col>
       </Row>
       <Row>
@@ -237,7 +255,7 @@ function CongVanDenCreate() {
             className={clsx(style.relative)}
           >
             <CardHeader>
-              <h4>Nhập thông tin</h4>
+              <h4>Cập nhật thông tin</h4>
             </CardHeader>
             <CardBody style={{ height: "60vh", overflow: "auto" }}>
               <Form inline onSubmit={handleFormSubmit}>
@@ -284,6 +302,7 @@ function CongVanDenCreate() {
                       <ReactSelect
                         ref={refDVPhatHanh}
                         options={dvPhatHanh}
+                        defaultValue={form.dv_phathanh}
                         isClearable
                         getOptionLabel={(option) => option.ten}
                         getOptionValue={(option) => option._id}
@@ -341,9 +360,7 @@ function CongVanDenCreate() {
                       <ReactSelect
                         ref={refDVNhan}
                         options={dvPhatHanh}
-                        defaultValue={dvPhatHanh.filter(
-                          (el) => el._id == donViUser
-                        )}
+                        defaultValue={form.dv_nhan}
                         getOptionLabel={(option) => option.ten}
                         getOptionValue={(option) => option._id}
                         isMulti
@@ -399,6 +416,7 @@ function CongVanDenCreate() {
                   <ReactSelect
                     ref={refLCV}
                     options={lcv}
+                    defaultValue={form.loaicongvan}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
                     id="loaicongvan"
@@ -449,6 +467,7 @@ function CongVanDenCreate() {
                   <ReactSelect
                     ref={refDM}
                     options={dm}
+                    defaultValue={form.domat}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
                     isClearable
@@ -795,4 +814,4 @@ function CongVanDenCreate() {
   );
 }
 
-export default CongVanDenCreate;
+export default CongVanDenEdit;

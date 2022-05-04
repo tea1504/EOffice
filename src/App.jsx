@@ -22,6 +22,7 @@ import CanBo from "./features/admin/canbo/CanBo";
 import CongVanDen from "./features/congvanden/CongVanDen";
 import CongVanDenCreate from "./features/congvanden/CongVanDenCreate";
 import CongVanDenDetail from "./features/congvanden/CongVanDenDetail";
+import CongVanDenEdit from "./features/congvanden/CongVanDenEdit";
 
 function App() {
   const dispatch = useDispatch();
@@ -60,6 +61,7 @@ function App() {
             <Route path="congvanden">
               <Route path="" element={<CongVanDen />} />
               <Route path="them" element={<CongVanDenCreate />} />
+              <Route path="sua/:id" element={<CongVanDenEdit />} />
               <Route path=":id" element={<CongVanDenDetail />} />
             </Route>
           </Route>

@@ -26,7 +26,12 @@ import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../app/datatableConfig";
 import conditionalRowStyles from "../congvan/conditionalRowStyles";
 import { selectUserLanhDao, selectUserVanThu } from "../user/userSlice";
-import { deleteDataAsync, getDataAsync, selectCVDData } from "./congVanDenSlice";
+import {
+  deleteDataAsync,
+  getDataAsync,
+  resetForm,
+  selectCVDData,
+} from "./congVanDenSlice";
 
 const ActionButton = ({ data }) => {
   const MySwal = withReactContent(Swal);
@@ -42,7 +47,9 @@ const ActionButton = ({ data }) => {
     navigate("./cong-van-den-so-" + data.so + "." + data._id);
   };
 
-  const handleEditButtonClick = () => {};
+  const handleEditButtonClick = () => {
+    navigate("./sua/cong-van-den-so-" + data.so + "." + data._id);
+  };
 
   const handleDeleteButtonClick = () => {
     MySwal.fire({
@@ -57,7 +64,11 @@ const ActionButton = ({ data }) => {
       if (result.isConfirmed) {
         dispatch(deleteDataAsync(data._id));
         dispatch(getDataAsync());
-        MySwal.fire("Đã xóa!", `Đã xóa công văn số ${data.so} khỏi hệ thống`, "success");
+        MySwal.fire(
+          "Đã xóa!",
+          `Đã xóa công văn số ${data.so} khỏi hệ thống`,
+          "success"
+        );
       } else if (
         /* Read more about handling dismissals below */
         result.dismiss === Swal.DismissReason.cancel
@@ -83,7 +94,7 @@ const ActionButton = ({ data }) => {
       >
         Xem chi tiết
       </Tooltip>
-      {(laVanThu||laLanhDao) && (
+      {(laVanThu || laLanhDao) && (
         <>
           <Button
             className="btn-neutral mx-1"
@@ -138,6 +149,7 @@ function CongVanDen() {
       name: "Đơn vị phát hành",
       selector: (row) => row.dv_phathanh?.ten,
       sortable: true,
+      maxWidth: '500px'
     },
     {
       name: "Trạng thái",
@@ -159,6 +171,7 @@ function CongVanDen() {
       name: "Trích yếu",
       selector: (row) => row.trichyeu,
       sortable: true,
+      maxWidth: '500px'
     },
     {
       cell: (row) => <ActionButton data={row} />,
@@ -186,6 +199,7 @@ function CongVanDen() {
   };
 
   useEffect(() => {
+    dispatch(resetForm());
     dispatch(getDataAsync());
   }, []);
 

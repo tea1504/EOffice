@@ -4,6 +4,7 @@ import api from './congVanDenAPI'
 const initialState = {
   data: [],
   form: {
+    _id: '',
     so: '',
     dv_phathanh: '',
     dv_nhan: [],
@@ -80,6 +81,18 @@ export const createDataAsync = createAsyncThunk(
   async (form) => {
     try {
       const response = await api.post(form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const editDataAsync = createAsyncThunk(
+  'congvanden/editdata',
+  async (form) => {
+    try {
+      const response = await api.put(form._id, form);
       return response.data;
     } catch (error) {
       return error.response;
@@ -184,6 +197,7 @@ export const congVanDenSlice = createSlice({
       state.form.errngayden = null;
     },
     resetForm: (state) => {
+      state.form._id = '';
       state.form.so = '';
       state.form.dv_phathanh = '';
       state.form.dv_nhan = [];
@@ -206,7 +220,31 @@ export const congVanDenSlice = createSlice({
       state.form.ngayden = '';
       state.form.taptin = [];
       state.form.isSubmitted = false;
-    }
+    },
+    formatDate: (state) => {
+      const formatdate = (ngay) => {
+        if (!ngay) return "";
+        var date = new Date(ngay);
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var dt = date.getDate();
+
+        if (dt < 10) {
+          dt = "0" + dt;
+        }
+        if (month < 10) {
+          month = "0" + month;
+        }
+        return year + "-" + month + "-" + dt;
+      };
+      state.form.ngay = formatdate(state.form.ngay);
+      state.form.ngayden = formatdate(state.form.ngayden);
+      state.form.hieuluc = formatdate(state.form.hieuluc);
+      state.form.hangiaiquyet = formatdate(state.form.hangiaiquyet);
+    },
+    resetTapTin: (state) => {
+      state.form.taptin = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -227,8 +265,9 @@ export const congVanDenSlice = createSlice({
           else
             state.err = { status: 500, data: "Lỗi server" }
         }
-        else
+        else {
           state.form = action.payload;
+        }
       })
       .addCase(createDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
@@ -263,6 +302,41 @@ export const congVanDenSlice = createSlice({
         else
           state.form.isSubmitted = true;
       })
+      .addCase(editDataAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
+        if (action.payload.status) {
+          if (action.payload.data.code) {
+            //Lỗi unique
+            if (action.payload.data.keyPattern.so)
+              state.form.errso = action.payload.data.keyValue.so + " bị trùng";
+          }
+          else if (action.payload.data.errors) {
+            state.form.errchucvu_nguoiky = action.payload.data.errors.chucvu_nguoiky?.message;
+            state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
+            state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
+            state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
+            state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
+            state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
+            state.form.errngay = action.payload.data.errors.ngay?.message;
+            state.form.errnguoiky = action.payload.data.errors.nguoiky?.message;
+            state.form.errnoiluu = action.payload.data.errors.noiluu?.message;
+            state.form.errso = action.payload.data.errors.so?.message;
+            state.form.errsoto = action.payload.data.errors.soto?.message;
+            state.form.errtaptin = action.payload.data.errors.taptin?.message;
+            state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
+            state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
+            state.form.errngayden = action.payload.data.errors.ngayden?.message;
+          }
+          else
+            state.err = {
+              status: 500,
+              data: "Lỗi server"
+            }
+        }
+        else {
+          state.form.isSubmitted = true;
+        }
+      })
       .addCase(deleteDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
@@ -278,6 +352,6 @@ export const selectCVDForm = state => state.cvd.form;
 export const selectCVDData = state => state.cvd.data;
 export const selectCVDErr = state => state.cvd.err;
 
-export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, } = congVanDenSlice.actions;
+export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDenSlice.actions;
 
 export default congVanDenSlice.reducer;

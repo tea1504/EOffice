@@ -47,11 +47,7 @@ function CongVanDenDetail() {
 
   const handleButtonPreviewClick = (el) => {
     setLink(
-      process.env.REACT_APP_BASE_API +
-        el.path +
-        "?token=" +
-        token +
-        "#toolbar=0&navpanes=0&scrollbar=0"
+      `${process.env.REACT_APP_BASE_API}/${form.domat?form.domat._id:""}/${el.path}?token=${token}#toolbar=0&navpanes=0&scrollbar=0`
     );
     setPreview(true);
   };

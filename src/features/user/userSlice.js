@@ -6,6 +6,7 @@ const initialState = {
   laadmin: false,
   lalanhdao: false,
   lavanthu: false,
+  donvi: "",
   err: null,
 };
 
@@ -42,6 +43,7 @@ export const userSlice = createSlice({
           state.laadmin = action.payload?.laadmin;
           state.lalanhdao = action.payload?.lalanhdao;
           state.lavanthu = action.payload?.lavanthu;
+          state.donvi = action.payload?.donvi;
         }
       });
   },
@@ -50,6 +52,7 @@ export const userSlice = createSlice({
 export const selectUserAdmin = state => state.user.laadmin;
 export const selectUserLanhDao = state => state.user.lalanhdao;
 export const selectUserVanThu = state => state.user.lavanthu;
+export const selectUserDonVi = state => state.user.donvi;
 
 export const { resetRole } = userSlice.actions;
 
