@@ -232,7 +232,7 @@ function CongVanDen() {
       </Row>
       <Row>
         <Col md={12}>
-          <Card>
+          <Card className="shadow">
             <DataTable
               pagination
               paginationComponentOptions={paginationConfig}

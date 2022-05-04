@@ -79,6 +79,7 @@ import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 import clsx from "clsx";
 import style from "./CongVanDen.module.css";
 import { selectUserDonVi } from "../user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function CongVanDenCreate() {
   const MySwal = withReactContent(Swal);
@@ -106,6 +107,7 @@ function CongVanDenCreate() {
   const refCBPD = useRef(null);
   const refFile = useRef(null);
   const donViUser = useSelector(selectUserDonVi);
+  const navigate = useNavigate();
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -217,8 +219,11 @@ function CongVanDenCreate() {
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
-        <Col md={12} className="mb-2">
+        <Col md={8} className="mb-2">
           <h2>Thêm công văn đến</h2>
+        </Col>
+        <Col md={4} className="mb-2 text-end">
+          <Button color="primary" className="shadow" onClick={() => navigate("/congvanden")}>Trở về</Button>
         </Col>
       </Row>
       <Row>
@@ -234,7 +239,7 @@ function CongVanDenCreate() {
         <Col>
           <Card
             style={{ height: "75vh", paddingBottom: "10px" }}
-            className={clsx(style.relative)}
+            className={clsx(style.relative, "shadow")}
           >
             <CardHeader>
               <h4>Nhập thông tin</h4>

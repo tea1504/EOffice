@@ -2,7 +2,7 @@ import { faDownload, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Card,
@@ -19,6 +19,29 @@ import { getDetailDataAsync, selectCVDForm } from "./congVanDenSlice";
 import { selectLoginToken } from "../login/loginSlice";
 import CongVanPreview from "../congvan/CongVanPreview";
 
+const XuLyItem = ({ data }) => {
+  const formatDateTime = (ngay) => {
+    if (!ngay) return "";
+    var options = { dateStyle: "short", timeStyle: "medium" };
+    var d = new Date(ngay);
+    return new Intl.DateTimeFormat("vi-VN", options).format(d);
+  };
+  return (
+    <Container fluid className="my-2">
+      <Row>
+        <Col sm={12} md={8}>
+          {data.canbo.ma} | {data.canbo.holot} {data.canbo.ten}
+        </Col>
+        <Col sm={12} md={4}>
+        <p style={{fontSize: '10px'}} className="text-end">{formatDateTime(data.thoigian)}</p>
+        </Col>
+      </Row>
+      <p>{data.noidung}</p>
+      <hr />
+    </Container>
+  );
+};
+
 function CongVanDenDetail() {
   const { id } = useParams();
   const _id = id.split(".")[1];
@@ -27,18 +50,13 @@ function CongVanDenDetail() {
   const token = useSelector(selectLoginToken);
   const [link, setLink] = useState("");
   const [preview, setPreview] = useState(false);
+  const navigate = useNavigate();
 
   const formatDate = (ngay) => {
     if (!ngay) return "";
     var options = { day: "2-digit", month: "2-digit", year: "numeric" };
     var d = new Date(ngay);
     return d.toLocaleDateString("vi-VN", options);
-  };
-  const formatDateTime = (ngay) => {
-    if (!ngay) return "";
-    var options = { dateStyle: "short", timeStyle: "short" };
-    var d = new Date(ngay);
-    return new Intl.DateTimeFormat("vi-VN", options).format(d);
   };
 
   useEffect(() => {
@@ -47,7 +65,9 @@ function CongVanDenDetail() {
 
   const handleButtonPreviewClick = (el) => {
     setLink(
-      `${process.env.REACT_APP_BASE_API}/${form.domat?form.domat._id:""}/${el.path}?token=${token}#toolbar=0&navpanes=0&scrollbar=0`
+      `${process.env.REACT_APP_BASE_API}/${form.domat ? form.domat._id : ""}/${
+        el.path
+      }?token=${token}#toolbar=0&navpanes=0&scrollbar=0`
     );
     setPreview(true);
   };
@@ -68,9 +88,7 @@ function CongVanDenDetail() {
                 </Button>{" "}
                 <a
                   className="btn btn-neutral"
-                  href={
-                    `${process.env.REACT_APP_BASE_API_DOWNLOAD_CVD}${form._id}/file/${el.path}?token=${token}`
-                  }
+                  href={`${process.env.REACT_APP_BASE_API_DOWNLOAD_CVD}${form._id}/file/${el.path}?token=${token}`}
                   target="_blank"
                 >
                   <FontAwesomeIcon icon={faDownload} className="text-success" />
@@ -85,9 +103,23 @@ function CongVanDenDetail() {
 
   return (
     <Container fluid className="my-3 px-5">
+      <Row className="mb-3">
+        <Col md={8} className="mb-2">
+          <h2>Xem công văn đến</h2>
+        </Col>
+        <Col md={4} className="mb-2 text-end">
+          <Button
+            color="primary"
+            className="shadow"
+            onClick={() => navigate("/congvanden")}
+          >
+            Trở về
+          </Button>
+        </Col>
+      </Row>
       <Row>
         <Col md={9}>
-          <Card>
+          <Card style={{ maxHeight: "75vh", overflow: "auto" }}>
             <CardBody>
               <Table bordered>
                 <tbody>
@@ -200,19 +232,13 @@ function CongVanDenDetail() {
           </Card>
         </Col>
         <Col md={3}>
-          <Card>
+          <Card style={{ maxHeight: "75vh", overflow: "auto" }}>
             <CardBody>
-              <ul>
-                {form.xuly?.map((el) => (
-                  <li key={el._id}>
-                    {formatDateTime(el.thoigian) +
-                      ": " +
-                      el.canbo?.ma +
-                      " | " +
-                      el.noidung}
-                  </li>
+              <div>
+                {form.xuly.map((el) => (
+                  <XuLyItem key={el._id} data={el} />
                 ))}
-              </ul>
+              </div>
             </CardBody>
           </Card>
         </Col>

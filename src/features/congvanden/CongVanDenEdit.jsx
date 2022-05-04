@@ -82,7 +82,7 @@ import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 import clsx from "clsx";
 import style from "./CongVanDen.module.css";
 import { selectUserDonVi } from "../user/userSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CongVanDenEdit() {
   const { id } = useParams();
@@ -111,6 +111,7 @@ function CongVanDenEdit() {
   const refDK = useRef(null);
   const refCBPD = useRef(null);
   const refFile = useRef(null);
+  const navigate = useNavigate();
 
   const handleInputFileOnChange = (e) => {
     dispatch(onChangeFormTapTin(e.target.files));
@@ -235,8 +236,11 @@ function CongVanDenEdit() {
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
-        <Col md={12} className="mb-2">
+        <Col md={8} className="mb-2">
           <h2>Cập nhật công văn đến</h2>
+        </Col>
+        <Col md={4} className="mb-2 text-end">
+          <Button color="primary" className="shadow" onClick={() => navigate("/congvanden")}>Trở về</Button>
         </Col>
       </Row>
       <Row>
