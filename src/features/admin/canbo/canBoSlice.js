@@ -107,6 +107,7 @@ export const canBoSlice = createSlice({
   name: 'canbo',
   initialState,
   reducers: {
+    reset: () => initialState,
     resetErr: (state) => {
       state.err = null;
     },
@@ -287,6 +288,6 @@ export const selectCBAdd = state => state.cb.add;
 export const selectCBForm = state => state.cb.form;
 export const selectCBErr = state => state.cb.err;
 
-export const { resetErr, setDetail, setEdit, setAdd, setForm, onChangeFormTen, resetForm, resetFormErr, onChangeFormDonVi, onChangeFormEmail, onChangeFormMa, onChangeFormHoLot, onChangeFormSdt, toggleAdmin, toggleLanhDao, toggleVanThu, toggleActived } = canBoSlice.actions;
+export const { reset, resetErr, setDetail, setEdit, setAdd, setForm, onChangeFormTen, resetForm, resetFormErr, onChangeFormDonVi, onChangeFormEmail, onChangeFormMa, onChangeFormHoLot, onChangeFormSdt, toggleAdmin, toggleLanhDao, toggleVanThu, toggleActived } = canBoSlice.actions;
 
 export default canBoSlice.reducer;

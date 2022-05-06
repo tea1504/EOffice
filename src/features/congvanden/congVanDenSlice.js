@@ -116,6 +116,7 @@ export const congVanDenSlice = createSlice({
   name: 'congvanden',
   initialState,
   reducers: {
+    reset: () => initialState,
     onChangeFormSo: (state, action) => {
       state.form.so = action.payload;
     },
@@ -352,6 +353,6 @@ export const selectCVDForm = state => state.cvd.form;
 export const selectCVDData = state => state.cvd.data;
 export const selectCVDErr = state => state.cvd.err;
 
-export const { onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDenSlice.actions;
+export const { reset, onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDenSlice.actions;
 
 export default congVanDenSlice.reducer;

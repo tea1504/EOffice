@@ -4,10 +4,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Button, Container } from "reactstrap";
+import { reset as resetCanBo } from "../../features/admin/canbo/canBoSlice";
 import {
   selectSidebar,
   toggleSidebar,
 } from "../../features/common/commonSlide";
+import { reset as resetCVD } from "../../features/congvanden/congVanDenSlice";
 import {
   changeMa,
   changePassword,
@@ -33,6 +35,8 @@ export const MyHeader = () => {
     dispatch(changePassword(""));
     dispatch(resetRole());
     dispatch(removeToken());
+    // dispatch(resetCanBo());
+    // dispatch(resetCVD());
   };
 
   useEffect(() => {

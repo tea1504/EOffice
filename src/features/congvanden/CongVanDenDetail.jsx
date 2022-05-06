@@ -235,7 +235,7 @@ function CongVanDenDetail() {
           <Card style={{ maxHeight: "75vh", overflow: "auto" }}>
             <CardBody>
               <div>
-                {form.xuly.map((el) => (
+                {form.xuly?.map((el) => (
                   <XuLyItem key={el._id} data={el} />
                 ))}
               </div>
