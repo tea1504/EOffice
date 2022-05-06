@@ -3,7 +3,8 @@ import {
   faBook,
   faBuilding,
   faDashboard,
-  faFileImport,
+  faFileArrowDown,
+  faFileArrowUp,
   faPersonRunning,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -29,7 +30,7 @@ export const MySidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-brand d-none d-md-flex">alo</div>
+      <div className="sidebar-brand d-none d-md-flex">EOffice</div>
       <ul className="sidebar-nav">
         <div className="simplebar-wrapper">
           <div className="simplebar-mark">
@@ -140,9 +141,26 @@ export const MySidebar = () => {
                       >
                         <FontAwesomeIcon
                           className="nav-icon text-success"
-                          icon={faFileImport}
+                          icon={faFileArrowDown}
                         />
-                        Công Văn đến
+                        Công văn đến
+                      </NavLink>
+                    </li>
+                  )}
+                  {(lanhdao || vanthu || (!lanhdao && !vanthu && !admin)) && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/congvandi"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon text-warning"
+                          icon={faFileArrowUp}
+                        />
+                        Công văn đi
                       </NavLink>
                     </li>
                   )}
