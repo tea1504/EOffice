@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Resizable } from "re-resizable";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactSelect from "react-select";
 import {
@@ -43,7 +43,6 @@ import {
   onChangeFormChucVuNguoiKy,
   onChangeFormDK,
   onChangeFormDM,
-  onChangeFormDVNhan,
   onChangeFormDVPhatHanh,
   onChangeFormGhiChu,
   onChangeFormHanGiaiQuyet,
@@ -159,9 +158,6 @@ function CongVanDenCreate() {
       ].join("-");
     };
     dispatch(onChangeFormNgayDen(yyyymmdd(new Date())));
-    dispatch(onChangeFormDVNhan(dvPhatHanh.filter(
-      (el) => el._id == donViUser
-    )))
   }, []);
 
   useEffect(() => {
@@ -328,66 +324,6 @@ function CongVanDenCreate() {
                       >
                         <FontAwesomeIcon icon={faPlus} />
                       </Button>
-                    </Col>
-                  </Row>
-                </FormGroup>
-                {/* nhan */}
-                <FormGroup>
-                  <Label for="nhan">
-                    Đơn vị nhận
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="text-danger mx-1"
-                      id="tt"
-                    />
-                  </Label>
-                  <Row>
-                    <Col sm={11}>
-                      <ReactSelect
-                        ref={refDVNhan}
-                        options={dvPhatHanh}
-                        defaultValue={dvPhatHanh.filter(
-                          (el) => el._id == donViUser
-                        )}
-                        getOptionLabel={(option) => option.ten}
-                        getOptionValue={(option) => option._id}
-                        isMulti
-                        isClearable
-                        id="nhan"
-                        name="nhan"
-                        placeholder="Chọn đơn vị nhận..."
-                        onChange={(e) => dispatch(onChangeFormDVNhan(e))}
-                        className={clsx({
-                          "is-invalid": form.errdv_nhan != null,
-                        })}
-                        styles={{
-                          control: (base, state) => ({
-                            ...base,
-                            borderColor:
-                              form.errdv_nhan != null
-                                ? "#dc3545"
-                                : "hsl(0, 0%, 80%)",
-                          }),
-                        }}
-                      />
-                      <FormFeedback>{form.errdv_nhan}</FormFeedback>
-                    </Col>
-                    <Col sm={1}>
-                      <Button
-                        color="primary"
-                        className="w-100"
-                        id="btn"
-                        onClick={() => dispatch(setDVAdd(true))}
-                      >
-                        <FontAwesomeIcon icon={faPlus} />
-                      </Button>
-                      <Tooltip
-                        target="btn"
-                        isOpen={tooltipBTN}
-                        toggle={() => setToolTipBTN(!tooltipBTN)}
-                      >
-                        Thêm đơn vị
-                      </Tooltip>
                     </Col>
                   </Row>
                 </FormGroup>

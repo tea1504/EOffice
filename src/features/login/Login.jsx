@@ -53,7 +53,8 @@ function Login() {
   useEffect(() => {
     if (token) {
       dispatch(checkRoleAsync());
-      navigate(location.state ? location.state.from : "/");
+      // navigate(location.state ? location.state.from : "/");
+      navigate("/");
     }
   }, [token]);
 

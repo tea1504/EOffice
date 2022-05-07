@@ -7,7 +7,6 @@ const initialState = {
     _id: '',
     so: '',
     dv_phathanh: '',
-    dv_nhan: [],
     loaicongvan: '',
     cb_nhap: '',
     cb_pheduyet: '',
@@ -28,7 +27,6 @@ const initialState = {
     taptin: [],
     errso: null,
     errdv_phathanh: null,
-    errdv_nhan: null,
     errloaicongvan: null,
     errcb_nhap: null,
     errcb_pheduyet: null,
@@ -123,9 +121,6 @@ export const congVanDenSlice = createSlice({
     onChangeFormDVPhatHanh: (state, action) => {
       state.form.dv_phathanh = action.payload;
     },
-    onChangeFormDVNhan: (state, action) => {
-      state.form.dv_nhan = action.payload.map(el => el._id);
-    },
     setCBNhap: (state, action) => {
       state.form.cb_nhap = action.payload;
     },
@@ -184,7 +179,6 @@ export const congVanDenSlice = createSlice({
       state.form.errchucvu_nguoiky = null;
       state.form.errdokhan = null;
       state.form.errdomat = null;
-      state.form.errdv_nhan = null;
       state.form.errdv_phathanh = null;
       state.form.errloaicongvan = null;
       state.form.errngay = null;
@@ -201,7 +195,6 @@ export const congVanDenSlice = createSlice({
       state.form._id = '';
       state.form.so = '';
       state.form.dv_phathanh = '';
-      state.form.dv_nhan = [];
       state.form.loaicongvan = '';
       state.form.cb_nhap = '';
       state.form.cb_pheduyet = '';
@@ -281,7 +274,6 @@ export const congVanDenSlice = createSlice({
             state.form.errchucvu_nguoiky = action.payload.data.errors.chucvu_nguoiky?.message;
             state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
             state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
-            state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
             state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
             state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
             state.form.errngay = action.payload.data.errors.ngay?.message;
@@ -315,7 +307,6 @@ export const congVanDenSlice = createSlice({
             state.form.errchucvu_nguoiky = action.payload.data.errors.chucvu_nguoiky?.message;
             state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
             state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
-            state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
             state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
             state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
             state.form.errngay = action.payload.data.errors.ngay?.message;

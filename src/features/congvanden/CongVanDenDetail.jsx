@@ -131,18 +131,7 @@ function CongVanDenDetail() {
                   </tr>
                   <tr>
                     <th>Đơn vị phát hành</th>
-                    <td colSpan={2}>{form.dv_phathanh?.ten}</td>
-                    <th>Đơn vị nhận</th>
-                    <td colSpan={2}>
-                      {form.dv_nhan?.map((el, ind) => {
-                        return (
-                          <div key={ind}>
-                            {el.ten}
-                            <br />
-                          </div>
-                        );
-                      })}
-                    </td>
+                    <td colSpan={5}>{form.dv_phathanh?.ten}</td>
                   </tr>
                   <tr>
                     <th>Cán bộ nhập</th>

@@ -30,7 +30,7 @@ export const MySidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-brand d-none d-md-flex">EOffice</div>
+      <div className="sidebar-brand d-none d-md-flex">EOffice | Văn phòng điện tử</div>
       <ul className="sidebar-nav">
         <div className="simplebar-wrapper">
           <div className="simplebar-mark">
@@ -47,7 +47,7 @@ export const MySidebar = () => {
                         }
                       >
                         <FontAwesomeIcon
-                          className="nav-icon"
+                          className="nav-icon text-primary"
                           icon={faDashboard}
                         />
                         Dashboard
@@ -63,7 +63,7 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon" icon={faBook} />
+                        <FontAwesomeIcon className="nav-icon text-secondary" icon={faBook} />
                         Loại công văn
                       </NavLink>
                     </li>
@@ -78,7 +78,7 @@ export const MySidebar = () => {
                         }
                       >
                         <FontAwesomeIcon
-                          className="nav-icon"
+                          className="nav-icon text-success"
                           icon={faPersonRunning}
                         />
                         Độ khẩn
@@ -94,7 +94,7 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon" icon={faBan} />
+                        <FontAwesomeIcon className="nav-icon text-danger" icon={faBan} />
                         Độ mật
                       </NavLink>
                     </li>
@@ -109,7 +109,7 @@ export const MySidebar = () => {
                         }
                       >
                         <FontAwesomeIcon
-                          className="nav-icon"
+                          className="nav-icon text-warning"
                           icon={faBuilding}
                         />
                         Đơn vị
@@ -125,7 +125,7 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon" icon={faUser} />
+                        <FontAwesomeIcon className="nav-icon text-info" icon={faUser} />
                         Cán bộ
                       </NavLink>
                     </li>
