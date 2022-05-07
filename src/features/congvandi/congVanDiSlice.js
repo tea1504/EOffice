@@ -6,11 +6,9 @@ const initialState = {
   form: {
     _id: '',
     so: '',
-    dv_phathanh: '',
     dv_nhan: [],
     loaicongvan: '',
     cb_nhap: '',
-    cb_pheduyet: '',
     trangthai: '',
     domat: '',
     dokhan: '',
@@ -22,16 +20,13 @@ const initialState = {
     soto: '',
     noiluu: '',
     ghichu: '',
-    hangiaiquyet: '',
-    ykien: '',
-    ngayden: '',
+    hantraloi: '',
+    ngaydi: '',
     taptin: [],
     errso: null,
-    errdv_phathanh: null,
     errdv_nhan: null,
     errloaicongvan: null,
     errcb_nhap: null,
-    errcb_pheduyet: null,
     errtrangthai: null,
     errdomat: null,
     errdokhan: null,
@@ -43,9 +38,8 @@ const initialState = {
     errsoto: null,
     errnoiluu: null,
     errghichu: null,
-    errhangiaiquyet: null,
-    errykien: null,
-    errngayden: null,
+    errhantraloi: null,
+    errngaydi: null,
     errtaptin: null,
     isSubmitted: false,
   },
@@ -53,7 +47,7 @@ const initialState = {
 }
 
 export const getDataAsync = createAsyncThunk(
-  'congvanden/getdata',
+  'congvandi/getdata',
   async () => {
     try {
       const response = await api.get();
@@ -65,7 +59,7 @@ export const getDataAsync = createAsyncThunk(
 )
 
 export const getDetailDataAsync = createAsyncThunk(
-  'congvanden/getdetaildata',
+  'congvandi/getdetaildata',
   async (id) => {
     try {
       const response = await api.getDetail(id);
@@ -77,7 +71,7 @@ export const getDetailDataAsync = createAsyncThunk(
 )
 
 export const createDataAsync = createAsyncThunk(
-  'congvanden/createdata',
+  'congvandi/createdata',
   async (form) => {
     try {
       const response = await api.post(form);
@@ -89,7 +83,7 @@ export const createDataAsync = createAsyncThunk(
 )
 
 export const editDataAsync = createAsyncThunk(
-  'congvanden/editdata',
+  'congvandi/editdata',
   async (form) => {
     try {
       const response = await api.put(form._id, form);
@@ -101,7 +95,7 @@ export const editDataAsync = createAsyncThunk(
 )
 
 export const deleteDataAsync = createAsyncThunk(
-  'congvanden/deletedata',
+  'congvandi/deletedata',
   async (id) => {
     try {
       const response = await api.delete(id);
@@ -112,8 +106,8 @@ export const deleteDataAsync = createAsyncThunk(
   }
 )
 
-export const congVanDenSlice = createSlice({
-  name: 'congvanden',
+export const congVanDiSlice = createSlice({
+  name: 'congvandi',
   initialState,
   reducers: {
     reset: () => initialState,
@@ -122,9 +116,6 @@ export const congVanDenSlice = createSlice({
     },
     onChangeFormDVPhatHanh: (state, action) => {
       state.form.dv_phathanh = action.payload;
-    },
-    onChangeFormDVNhan: (state, action) => {
-      state.form.dv_nhan = action.payload.map(el => el._id);
     },
     setCBNhap: (state, action) => {
       state.form.cb_nhap = action.payload;
@@ -162,11 +153,11 @@ export const congVanDenSlice = createSlice({
     onChangeFormGhiChu: (state, action) => {
       state.form.ghichu = action.payload;
     },
-    onChangeFormNgayDen: (state, action) => {
-      state.form.ngayden = action.payload;
+    onChangeFormNgayDi: (state, action) => {
+      state.form.ngaydi = action.payload;
     },
-    onChangeFormHanGiaiQuyet: (state, action) => {
-      state.form.hangiaiquyet = action.payload;
+    onChangeFormHanTraLoi: (state, action) => {
+      state.form.hantraloi = action.payload;
     },
     onChangeFormTrangThai: (state, action) => {
       state.form.trangthai = action.payload;
@@ -179,6 +170,9 @@ export const congVanDenSlice = createSlice({
     },
     onChangeFormCBTrangThai: (state, action) => {
       state.form.trangthai = action.payload;
+    },
+    onChangeFormDVNhan: (state, action) => {
+      state.form.dv_nhan = action.payload.map(el => el._id);
     },
     resetFormErr: (state) => {
       state.form.errchucvu_nguoiky = null;
@@ -200,7 +194,6 @@ export const congVanDenSlice = createSlice({
     resetForm: (state) => {
       state.form._id = '';
       state.form.so = '';
-      state.form.dv_phathanh = '';
       state.form.dv_nhan = [];
       state.form.loaicongvan = '';
       state.form.cb_nhap = '';
@@ -216,9 +209,8 @@ export const congVanDenSlice = createSlice({
       state.form.soto = '';
       state.form.noiluu = '';
       state.form.ghichu = '';
-      state.form.hangiaiquyet = '';
-      state.form.ykien = '';
-      state.form.ngayden = '';
+      state.form.hantraloi = '';
+      state.form.ngaydi = '';
       state.form.taptin = [];
       state.form.isSubmitted = false;
     },
@@ -239,9 +231,9 @@ export const congVanDenSlice = createSlice({
         return year + "-" + month + "-" + dt;
       };
       state.form.ngay = formatdate(state.form.ngay);
-      state.form.ngayden = formatdate(state.form.ngayden);
+      state.form.ngaydi = formatdate(state.form.ngayden);
       state.form.hieuluc = formatdate(state.form.hieuluc);
-      state.form.hangiaiquyet = formatdate(state.form.hangiaiquyet);
+      state.form.hantraloi = formatdate(state.form.hangiaiquyet);
     },
     resetTapTin: (state) => {
       state.form.taptin = [];
@@ -282,7 +274,6 @@ export const congVanDenSlice = createSlice({
             state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
             state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
             state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
-            state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
             state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
             state.form.errngay = action.payload.data.errors.ngay?.message;
             state.form.errnguoiky = action.payload.data.errors.nguoiky?.message;
@@ -292,7 +283,7 @@ export const congVanDenSlice = createSlice({
             state.form.errtaptin = action.payload.data.errors.taptin?.message;
             state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
             state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
-            state.form.errngayden = action.payload.data.errors.ngayden?.message;
+            state.form.errngaydi = action.payload.data.errors.ngaydi?.message;
           }
           else
             state.err = {
@@ -316,7 +307,6 @@ export const congVanDenSlice = createSlice({
             state.form.errdokhan = action.payload.data.errors.dokhan ? "Bạn phải chọn độ khẩn" : null;
             state.form.errdomat = action.payload.data.errors.domat ? "Bạn phải chọn độ mật" : null;
             state.form.errdv_nhan = action.payload.data.errors.dv_nhan ? "Bạn phải chọn đơn vị nhận" : null;
-            state.form.errdv_phathanh = action.payload.data.errors.dv_phathanh ? "Bạn phải chọn đơn vị phát hành" : null;
             state.form.errloaicongvan = action.payload.data.errors.loaicongvan ? "Bạn phải chọn loại công văn" : null;
             state.form.errngay = action.payload.data.errors.ngay?.message;
             state.form.errnguoiky = action.payload.data.errors.nguoiky?.message;
@@ -326,7 +316,7 @@ export const congVanDenSlice = createSlice({
             state.form.errtaptin = action.payload.data.errors.taptin?.message;
             state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
             state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
-            state.form.errngayden = action.payload.data.errors.ngayden?.message;
+            state.form.errngaydi = action.payload.data.errors.ngaydi?.message;
           }
           else
             state.err = {
@@ -349,10 +339,10 @@ export const congVanDenSlice = createSlice({
   }
 })
 
-export const selectCVDForm = state => state.cvd.form;
-export const selectCVDData = state => state.cvd.data;
-export const selectCVDErr = state => state.cvd.err;
+export const selectCVDiForm = state => state.cvdi.form;
+export const selectCVDiData = state => state.cvdi.data;
+export const selectCVDiErr = state => state.cvdi.err;
 
-export const { reset, onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDenSlice.actions;
+export const { reset, onChangeFormSo, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDi, onChangeFormHanTraLoi, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDiSlice.actions;
 
-export default congVanDenSlice.reducer;
+export default congVanDiSlice.reducer;

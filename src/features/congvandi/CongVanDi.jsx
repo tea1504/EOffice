@@ -30,7 +30,7 @@ import {
   deleteDataAsync,
   getDataAsync,
   resetForm,
-  selectCVDData,
+  selectCVDiData,
 } from "./congVanDiSlice";
 
 const ActionButton = ({ data }) => {
@@ -180,7 +180,7 @@ function CongVanDi() {
     },
   ];
   const vanThu = useSelector(selectUserVanThu);
-  const data = useSelector(selectCVDData);
+  const data = useSelector(selectCVDiData);
   const dispatch = useDispatch();
   const [filterText, setFilterText] = useState("");
   const navigate = useNavigate();
@@ -207,7 +207,7 @@ function CongVanDi() {
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
         <Col md={12} className="mb-2">
-          <h2>Công văn đến</h2>
+          <h2>Công văn đi</h2>
         </Col>
         <Col md={6}>
           <InputGroup>

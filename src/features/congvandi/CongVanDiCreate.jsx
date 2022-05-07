@@ -52,8 +52,12 @@ import {
   getDataAsync as getTT,
   selectTTData,
 } from "../admin/trangthai/trangThaiSlice";
+import { createDataAsync, onChangeFormCBTrangThai, onChangeFormChucVuNguoiKy, onChangeFormDK, onChangeFormDM, onChangeFormDVNhan, onChangeFormGhiChu, onChangeFormHanTraLoi, onChangeFormHieuLuc, onChangeFormLCV, onChangeFormNgay, onChangeFormNgayDi, onChangeFormNGuoiKy, onChangeFormNoiLuu, onChangeFormSo, onChangeFormSoTo, onChangeFormTapTin, onChangeFormTrichYeu, resetForm, resetFormErr, selectCVDiForm } from "./congVanDiSlice"
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
 function CongVanDiCreate() {
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
   const [pdf, setpdf] = useState(null);
   const addDV = useSelector(selectDVAdd);
@@ -74,29 +78,43 @@ function CongVanDiCreate() {
   const dk = useSelector(selectDKData);
   const tt = useSelector(selectTTData);
   const [listPDF, setListPDF] = useState([]);
+  const form = useSelector(selectCVDiForm);
+  const refLCV = useRef(null);
+
+  const handleInputFileOnChange = (e) => {
+    dispatch(onChangeFormTapTin(e.target.files));
+    const files = Array.from(e.target.files);
+    setListPDF([]);
+    files.map((el) => {
+      setListPDF((prevState) => [
+        ...prevState,
+        { value: URL.createObjectURL(el), label: el.name },
+      ]);
+    });
+  };
 
   useEffect(() => {
-    // dispatch(resetForm());
+    dispatch(resetForm());
     dispatch(getDataByClericalAssistantAsync());
     dispatch(getLCV());
     dispatch(getDM());
     dispatch(getDK());
     dispatch(getTT());
-    // dispatch(getDataLanhDaoAsync());
-    // const yyyymmdd = (date) => {
-    //   var mm = date.getMonth() + 1;
-    //   var dd = date.getDate();
-    //   return [
-    //     date.getFullYear(),
-    //     (mm > 9 ? "" : "0") + mm,
-    //     (dd > 9 ? "" : "0") + dd,
-    //   ].join("-");
-    // };
-    // dispatch(onChangeFormNgayDen(yyyymmdd(new Date())));
-    // dispatch(onChangeFormDVNhan(dvPhatHanh.filter(
-    //   (el) => el._id == donViUser
-    // )))
+    const yyyymmdd = (date) => {
+      var mm = date.getMonth() + 1;
+      var dd = date.getDate();
+      return [
+        date.getFullYear(),
+        (mm > 9 ? "" : "0") + mm,
+        (dd > 9 ? "" : "0") + dd,
+      ].join("-");
+    };
+    dispatch(onChangeFormNgayDi(yyyymmdd(new Date())));
   }, []);
+
+  useEffect(() => {
+    if (tt.length > 0) dispatch(onChangeFormCBTrangThai(tt[0]._id));
+  }, [tt]);
 
   const renderTrangThai = () => {
     return (
@@ -108,8 +126,8 @@ function CongVanDiCreate() {
                 type="radio"
                 name="tt"
                 id={"tt_" + el._id}
-                // checked={form.trangthai === el._id}
-                // onChange={() => dispatch(onChangeFormCBTrangThai(el._id))}
+                checked={form.trangthai === el._id}
+                onChange={() => dispatch(onChangeFormCBTrangThai(el._id))}
               />{" "}
               <Label for={"tt_" + el._id}>{el.ten}</Label>
             </Col>
@@ -121,7 +139,29 @@ function CongVanDiCreate() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    dispatch(resetFormErr());
+    dispatch(createDataAsync(form));
   };
+
+  useEffect(() => {
+    if (form.isSubmitted)
+      MySwal.fire({
+        title: <h1>Lưu thành công</h1>,
+        text: `Đã lưu công văn ${form.so} vào hệ thống`,
+        icon: "success",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {
+        dispatch(resetForm());
+        dispatch(resetFormErr());
+        refDVNhan.current.clearValue();
+        refLCV.current.clearValue();
+        refDM.current.clearValue();
+        refDK.current.clearValue();
+        refCBPD.current.clearValue();
+        refFile.current.clearValue();
+        dispatch(onChangeFormCBTrangThai(tt[0]._id));
+      });
+  }, [form.isSubmitted]);
 
   return (
     <Container fluid className="my-3 px-5">
@@ -177,15 +217,15 @@ function CongVanDiCreate() {
                     </Tooltip>
                   </Label>
                   <Input
-                    // value={form.so}
-                    // onChange={(e) => dispatch(onChangeFormSo(e.target.value))}
+                    value={form.so}
+                    onChange={(e) => dispatch(onChangeFormSo(e.target.value))}
                     type="text"
                     id="so"
                     name="socvd"
                     placeholder="Nhập số công văn..."
-                    // invalid={form.errso != null}
+                    invalid={form.errso != null}
                   />
-                  {/* <FormFeedback>{form.errso}</FormFeedback> */}
+                  <FormFeedback>{form.errso}</FormFeedback>
                 </FormGroup>
                 {/* nhan */}
                 <FormGroup>
@@ -209,21 +249,21 @@ function CongVanDiCreate() {
                         id="nhan"
                         name="nhan"
                         placeholder="Chọn đơn vị nhận..."
-                        // onChange={(e) => dispatch(onChangeFormDVNhan(e))}
-                        // className={clsx({
-                        //   "is-invalid": form.errdv_nhan != null,
-                        // })}
-                        // styles={{
-                        //   control: (base, state) => ({
-                        //     ...base,
-                        //     borderColor:
-                        //       form.errdv_nhan != null
-                        //         ? "#dc3545"
-                        //         : "hsl(0, 0%, 80%)",
-                        //   }),
-                        // }}
+                        onChange={(e) => dispatch(onChangeFormDVNhan(e))}
+                        className={clsx({
+                          "is-invalid": form.errdv_nhan != null,
+                        })}
+                        styles={{
+                          control: (base, state) => ({
+                            ...base,
+                            borderColor:
+                              form.errdv_nhan != null
+                                ? "#dc3545"
+                                : "hsl(0, 0%, 80%)",
+                          }),
+                        }}
                       />
-                      {/* <FormFeedback>{form.errdv_nhan}</FormFeedback> */}
+                      <FormFeedback>{form.errdv_nhan}</FormFeedback>
                     </Col>
                     <Col sm={1}>
                       <Button
@@ -255,7 +295,7 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <ReactSelect
-                    // ref={refLCV}
+                    ref={refLCV}
                     options={lcv}
                     getOptionLabel={(option) => option.ten}
                     getOptionValue={(option) => option._id}
@@ -263,29 +303,29 @@ function CongVanDiCreate() {
                     name="loaicongvandi"
                     isClearable
                     placeholder="Chọn loại công văn..."
-                    // onChange={(e) => {
-                    //   if (!e) {
-                    //     e = {
-                    //       target: refLCV,
-                    //       value: "",
-                    //     };
-                    //     dispatch(onChangeFormLCV(""));
-                    //   } else dispatch(onChangeFormLCV(e._id));
-                    // }}
-                    // className={clsx({
-                    //   "is-invalid": form.errloaicongvan != null,
-                    // })}
-                    // styles={{
-                    //   control: (base, state) => ({
-                    //     ...base,
-                    //     borderColor:
-                    //       form.errloaicongvan != null
-                    //         ? "#dc3545"
-                    //         : "hsl(0, 0%, 80%)",
-                    //   }),
-                    // }}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refLCV,
+                          value: "",
+                        };
+                        dispatch(onChangeFormLCV(""));
+                      } else dispatch(onChangeFormLCV(e._id));
+                    }}
+                    className={clsx({
+                      "is-invalid": form.errloaicongvan != null,
+                    })}
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor:
+                          form.errloaicongvan != null
+                            ? "#dc3545"
+                            : "hsl(0, 0%, 80%)",
+                      }),
+                    }}
                   />
-                  {/* <FormFeedback>{form.errloaicongvan}</FormFeedback> */}
+                  <FormFeedback>{form.errloaicongvan}</FormFeedback>
                 </FormGroup>
                 {/* domat */}
                 <FormGroup>
@@ -313,18 +353,18 @@ function CongVanDiCreate() {
                     id="domat"
                     name="domat"
                     placeholder="Chọn độ mật..."
-                    // onChange={(e) => {
-                    //   if (!e) {
-                    //     e = {
-                    //       target: refDM,
-                    //       value: "",
-                    //     };
-                    //     dispatch(onChangeFormDM(""));
-                    //   }
-                    //   dispatch(onChangeFormDM(e._id));
-                    // }}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refDM,
+                          value: "",
+                        };
+                        dispatch(onChangeFormDM(""));
+                      }
+                      dispatch(onChangeFormDM(e._id));
+                    }}
                   />
-                  {/* <FormFeedback>{form.errdomat}</FormFeedback> */}
+                  <FormFeedback>{form.errdomat}</FormFeedback>
                 </FormGroup>
                 {/* dokhan */}
                 <FormGroup>
@@ -352,18 +392,18 @@ function CongVanDiCreate() {
                     id="dokhan"
                     name="dokhan"
                     placeholder="Chọn độ khẩn..."
-                    // onChange={(e) => {
-                    //   if (!e) {
-                    //     e = {
-                    //       target: refDK,
-                    //       value: "",
-                    //     };
-                    //     dispatch(onChangeFormDK(""));
-                    //   }
-                    //   dispatch(onChangeFormDK(e._id));
-                    // }}
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refDK,
+                          value: "",
+                        };
+                        dispatch(onChangeFormDK(""));
+                      }
+                      dispatch(onChangeFormDK(e._id));
+                    }}
                   />
-                  {/* <FormFeedback>{form.errdokhan}</FormFeedback> */}
+                  <FormFeedback>{form.errdokhan}</FormFeedback>
                 </FormGroup>
                 {/* ngay */}
                 <FormGroup>
@@ -376,27 +416,27 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.ngay}
+                    value={form.ngay}
                     type="date"
                     id="ngay"
                     name="ngay"
-                    // onChange={(e) => dispatch(onChangeFormNgay(e.target.value))}
-                    // invalid={form.errngay != null}
+                    onChange={(e) => dispatch(onChangeFormNgay(e.target.value))}
+                    invalid={form.errngay != null}
                   />
-                  {/* <FormFeedback>{form.errngay}</FormFeedback> */}
+                  <FormFeedback>{form.errngay}</FormFeedback>
                 </FormGroup>
                 {/* hieuluc */}
                 <FormGroup>
                   <Label for="hieuluc">Hiệu lực</Label>
                   <Input
-                    // value={form.hieuluc}
+                    value={form.hieuluc}
                     type="date"
                     id="hieuluc"
                     name="hieuluc"
-                    // min={form.ngay}
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormHieuLuc(e.target.value))
-                    // }
+                    min={form.ngay}
+                    onChange={(e) =>
+                      dispatch(onChangeFormHieuLuc(e.target.value))
+                    }
                   />
                 </FormGroup>
                 {/* Trích yếu */}
@@ -410,17 +450,17 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.trichyeu}
+                    value={form.trichyeu}
                     type="textarea"
                     id="trichyeu"
                     name="trichyeucvd"
                     placeholder="Nhập trích yếu..."
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormTrichYeu(e.target.value))
-                    // }
-                    // invalid={form.errtrichyeu != null}
+                    onChange={(e) =>
+                      dispatch(onChangeFormTrichYeu(e.target.value))
+                    }
+                    invalid={form.errtrichyeu != null}
                   />
-                  {/* <FormFeedback>{form.errtrichyeu}</FormFeedback> */}
+                  <FormFeedback>{form.errtrichyeu}</FormFeedback>
                 </FormGroup>
                 {/* nguoiky */}
                 <FormGroup>
@@ -433,17 +473,17 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.nguoiky}
+                    value={form.nguoiky}
                     type="text"
                     id="nguoiky"
                     name="nguoikycvd"
                     placeholder="Nhập họ tên người ký..."
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormNGuoiKy(e.target.value))
-                    // }
-                    // invalid={form.errnguoiky != null}
+                    onChange={(e) =>
+                      dispatch(onChangeFormNGuoiKy(e.target.value))
+                    }
+                    invalid={form.errnguoiky != null}
                   />
-                  {/* <FormFeedback>{form.errnguoiky}</FormFeedback> */}
+                  <FormFeedback>{form.errnguoiky}</FormFeedback>
                 </FormGroup>
                 {/* cv_nguoiky */}
                 <FormGroup>
@@ -456,17 +496,17 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.chucvu_nguoiky}
+                    value={form.chucvu_nguoiky}
                     type="text"
                     id="cv_nguoiky"
                     name="cv_nguoikycvd"
                     placeholder="Nhập chức vụ người ký..."
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormChucVuNguoiKy(e.target.value))
-                    // }
-                    // invalid={form.errchucvu_nguoiky != null}
+                    onChange={(e) =>
+                      dispatch(onChangeFormChucVuNguoiKy(e.target.value))
+                    }
+                    invalid={form.errchucvu_nguoiky != null}
                   />
-                  {/* <FormFeedback>{form.errchucvu_nguoiky}</FormFeedback> */}
+                  <FormFeedback>{form.errchucvu_nguoiky}</FormFeedback>
                 </FormGroup>
                 {/* soto */}
                 <FormGroup>
@@ -479,16 +519,16 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.soto}
+                    value={form.soto}
                     type="number"
                     min={1}
                     id="soto"
                     name="sotocvd"
                     placeholder="Nhập số tờ..."
-                    // onChange={(e) => dispatch(onChangeFormSoTo(e.target.value))}
-                    // invalid={form.errsoto != null}
+                    onChange={(e) => dispatch(onChangeFormSoTo(e.target.value))}
+                    invalid={form.errsoto != null}
                   />
-                  {/* <FormFeedback>{form.errsoto}</FormFeedback> */}
+                  <FormFeedback>{form.errsoto}</FormFeedback>
                 </FormGroup>
                 {/* noiluu */}
                 <FormGroup>
@@ -501,30 +541,30 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.noiluu}
+                    value={form.noiluu}
                     type="text"
                     id="noiluu"
                     name="noiluucvd"
                     placeholder="Nhập nơi lưu..."
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormNoiLuu(e.target.value))
-                    // }
-                    // invalid={form.errnoiluu != null}
+                    onChange={(e) =>
+                      dispatch(onChangeFormNoiLuu(e.target.value))
+                    }
+                    invalid={form.errnoiluu != null}
                   />
-                  {/* <FormFeedback>{form.errnoiluu}</FormFeedback> */}
+                  <FormFeedback>{form.errnoiluu}</FormFeedback>
                 </FormGroup>
                 {/* ghichu */}
                 <FormGroup>
                   <Label for="ghichu">Ghi chú</Label>
                   <Input
-                    // value={form.ghichu}
+                    value={form.ghichu}
                     type="textarea"
                     id="ghichu"
                     name="ghichu"
                     placeholder="Nhập ghi chú..."
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormGhiChu(e.target.value))
-                    // }
+                    onChange={(e) =>
+                      dispatch(onChangeFormGhiChu(e.target.value))
+                    }
                   />
                 </FormGroup>
                 {/* ngaydi */}
@@ -538,30 +578,30 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   <Input
-                    // value={form.ngayden}
+                    value={form.ngaydi}
                     type="date"
                     id="ngaydi"
                     name="ngaydi"
-                    // min={form.ngay}
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormNgayDen(e.target.value))
-                    // }
-                    // invalid={form.errngayden != null}
+                    min={form.ngay}
+                    onChange={(e) =>
+                      dispatch(onChangeFormNgayDi(e.target.value))
+                    }
+                    invalid={form.errngaydi != null}
                   />
-                  {/* <FormFeedback>{form.errngayden}</FormFeedback> */}
+                  <FormFeedback>{form.errngaydi}</FormFeedback>
                 </FormGroup>
                 {/* hantraloi */}
                 <FormGroup>
                   <Label for="hantraloi">Hạn trả lời</Label>
                   <Input
-                    // value={form.hangiaiquyet}
+                    value={form.hantraloi}
                     type="date"
                     id="hantraloi"
                     name="hantraloi"
-                    // min={form.ngayden}
-                    // onChange={(e) =>
-                    //   dispatch(onChangeFormHanGiaiQuyet(e.target.value))
-                    // }
+                    min={form.ngaydi}
+                    onChange={(e) =>
+                      dispatch(onChangeFormHanTraLoi(e.target.value))
+                    }
                   />
                 </FormGroup>
                 {/* trangthai */}
@@ -575,17 +615,17 @@ function CongVanDiCreate() {
                     />
                   </Label>
                   {renderTrangThai()}
-                  {/* <FormFeedback>{form.errtrangthai}</FormFeedback> */}
+                  <FormFeedback>{form.errtrangthai}</FormFeedback>
                 </FormGroup>
                 {/* Chon file */}
                 <FormGroup>
                   <Input
                     type="file"
                     multiple
-                    // onChange={handleInputFileOnChange}
-                    // invalid={form.errtaptin != null}
+                    onChange={handleInputFileOnChange}
+                    invalid={form.errtaptin != null}
                   />
-                  {/* <FormFeedback>{form.errtaptin}</FormFeedback> */}
+                  <FormFeedback>{form.errtaptin}</FormFeedback>
                 </FormGroup>
                 {/* Xem file */}
                 <FormGroup>

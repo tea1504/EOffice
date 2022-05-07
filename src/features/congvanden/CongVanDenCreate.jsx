@@ -181,7 +181,6 @@ function CongVanDenCreate() {
         dispatch(resetForm());
         dispatch(resetFormErr());
         refDVPhatHanh.current.clearValue();
-        refDVNhan.current.clearValue();
         refLCV.current.clearValue();
         refDM.current.clearValue();
         refDK.current.clearValue();
