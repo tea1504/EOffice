@@ -2,6 +2,7 @@ import {
   faBan,
   faBook,
   faBuilding,
+  faCheckSquare,
   faDashboard,
   faFileArrowDown,
   faFileArrowUp,
@@ -130,7 +131,7 @@ export const MySidebar = () => {
                       </NavLink>
                     </li>
                   )}
-                  {(lanhdao || vanthu || (!lanhdao && !vanthu && !admin)) && (
+                  {(
                     <li className="nav-item">
                       <NavLink
                         className="nav-link"
@@ -147,7 +148,7 @@ export const MySidebar = () => {
                       </NavLink>
                     </li>
                   )}
-                  {(lanhdao || vanthu || (!lanhdao && !vanthu && !admin)) && (
+                  {(
                     <li className="nav-item">
                       <NavLink
                         className="nav-link"
@@ -161,6 +162,23 @@ export const MySidebar = () => {
                           icon={faFileArrowUp}
                         />
                         Công văn đi
+                      </NavLink>
+                    </li>
+                  )}
+                  {lanhdao && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/duyetcongvan"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon text-primary"
+                          icon={faCheckSquare}
+                        />
+                        Duyệt công văn
                       </NavLink>
                     </li>
                   )}

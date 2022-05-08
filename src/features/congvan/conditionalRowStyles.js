@@ -11,4 +11,10 @@ export default [
       backgroundColor: "rgba(63, 195, 128, 0.15)",
     },
   },
+  {
+    when: (row) => row.trangthai?.ten == "chờ xử lý",
+    style: {
+      backgroundColor: "rgba(255, 193, 7, 0.15)",
+    },
+  },
 ];

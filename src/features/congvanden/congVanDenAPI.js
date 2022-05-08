@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('congvanden/full');
   },
+  getdulieuchuaduyet() {
+    return Api().get('congvanden/getdulieuchuaduyet/full');
+  },
   getDetail(id) {
     return Api().get('congvanden/full/' + id);
   },
@@ -50,6 +53,12 @@ export default {
         'Content-Type': 'multipart/form-data'
       }
     });
+  },
+  duyetCV(id, form) {
+    var formData = new FormData();
+    formData.append('ykien', form.ykien);
+    formData.append('cb_xuly', form.cb_xuly);
+    return Api().put('congvanden/duyet/' + id, formData);
   },
   delete(id) {
     return Api().delete('congvanden/' + id);

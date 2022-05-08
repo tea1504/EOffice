@@ -10,6 +10,7 @@ const initialState = {
     loaicongvan: '',
     cb_nhap: '',
     cb_pheduyet: '',
+    cb_xuly: '',
     trangthai: '',
     domat: '',
     dokhan: '',
@@ -62,6 +63,18 @@ export const getDataAsync = createAsyncThunk(
   }
 )
 
+export const getDuLieuChuaDuyetAsync = createAsyncThunk(
+  'congvanden/getdulieuchuaduyet',
+  async () => {
+    try {
+      const response = await api.getdulieuchuaduyet();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const getDetailDataAsync = createAsyncThunk(
   'congvanden/getdetaildata',
   async (id) => {
@@ -91,6 +104,18 @@ export const editDataAsync = createAsyncThunk(
   async (form) => {
     try {
       const response = await api.put(form._id, form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const duyetCVAsync = createAsyncThunk(
+  'congvanden/duyetCV',
+  async (form) => {
+    try {
+      const response = await api.duyetCV(form._id, form);
       return response.data;
     } catch (error) {
       return error.response;
@@ -175,6 +200,12 @@ export const congVanDenSlice = createSlice({
     onChangeFormCBTrangThai: (state, action) => {
       state.form.trangthai = action.payload;
     },
+    onChangeFormCBXuLy: (state, action) => {
+      state.form.cb_xuly = action.payload;
+    },
+    onChangeFormYKien: (state, action) => {
+      state.form.ykien = action.payload;
+    },
     resetFormErr: (state) => {
       state.form.errchucvu_nguoiky = null;
       state.form.errdokhan = null;
@@ -239,10 +270,23 @@ export const congVanDenSlice = createSlice({
     resetTapTin: (state) => {
       state.form.taptin = [];
     },
+    setIsSubmited: (state, action) => {
+      state.form.isSubmitted = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(getDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
+      .addCase(getDuLieuChuaDuyetAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }
@@ -261,6 +305,17 @@ export const congVanDenSlice = createSlice({
         }
         else {
           state.form = action.payload;
+        }
+      })
+      .addCase(duyetCVAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else {
+          state.form.isSubmitted = true;
         }
       })
       .addCase(createDataAsync.fulfilled, (state, action) => {
@@ -296,7 +351,6 @@ export const congVanDenSlice = createSlice({
           state.form.isSubmitted = true;
       })
       .addCase(editDataAsync.fulfilled, (state, action) => {
-        console.log(action.payload);
         if (action.payload.status) {
           if (action.payload.data.code) {
             //Lỗi unique
@@ -344,6 +398,6 @@ export const selectCVDForm = state => state.cvd.form;
 export const selectCVDData = state => state.cvd.data;
 export const selectCVDErr = state => state.cvd.err;
 
-export const { reset, onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDenSlice.actions;
+export const { reset, onChangeFormSo, onChangeFormDVPhatHanh, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDen, onChangeFormHanGiaiQuyet, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, onChangeFormCBXuLy, onChangeFormYKien, setIsSubmited, } = congVanDenSlice.actions;
 
 export default congVanDenSlice.reducer;

@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('canbo');
   },
+  getDuLieuTheoUser() {
+    return Api().get('canbo/user');
+  },
   getLanhDao() {
     return Api().get('canbo/lanhdao');
   },

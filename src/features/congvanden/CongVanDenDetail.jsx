@@ -2,13 +2,20 @@ import { faDownload, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import {
   Button,
   Card,
   CardBody,
   Col,
   Container,
+  Form,
+  FormGroup,
   Modal,
   ModalBody,
   ModalHeader,
@@ -16,8 +23,10 @@ import {
   Table,
 } from "reactstrap";
 import { getDetailDataAsync, selectCVDForm } from "./congVanDenSlice";
-import { selectLoginToken } from "../login/loginSlice";
+import { selectLoginMa, selectLoginToken } from "../login/loginSlice";
 import CongVanPreview from "../congvan/CongVanPreview";
+import { selectUserLanhDao } from "../user/userSlice";
+import DuyetCongVanDuyet from "../duyetcongvan/DuyetCongVanDuyet";
 
 const XuLyItem = ({ data }) => {
   const formatDateTime = (ngay) => {
@@ -30,10 +39,12 @@ const XuLyItem = ({ data }) => {
     <Container fluid className="my-2">
       <Row>
         <Col sm={12} md={8}>
-          {data.canbo.ma} | {data.canbo.holot} {data.canbo.ten}
+          {data.canbo.ma} <br /> <b>{data.canbo.holot} {data.canbo.ten}</b>
         </Col>
         <Col sm={12} md={4}>
-        <p style={{fontSize: '10px'}} className="text-end">{formatDateTime(data.thoigian)}</p>
+          <p style={{ fontSize: "10px" }} className="text-end">
+            {formatDateTime(data.thoigian)}
+          </p>
         </Col>
       </Row>
       <p>{data.noidung}</p>
@@ -51,6 +62,9 @@ function CongVanDenDetail() {
   const [link, setLink] = useState("");
   const [preview, setPreview] = useState(false);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const lanhdao = useSelector(selectUserLanhDao);
+  const ma = useSelector(selectLoginMa);
 
   const formatDate = (ngay) => {
     if (!ngay) return "";
@@ -60,6 +74,7 @@ function CongVanDenDetail() {
   };
 
   useEffect(() => {
+    document.title = "Công văn đến số " + form.so;
     dispatch(getDetailDataAsync(_id));
   }, []);
 
@@ -111,7 +126,12 @@ function CongVanDenDetail() {
           <Button
             color="primary"
             className="shadow"
-            onClick={() => navigate("/congvanden")}
+            onClick={() => {
+              console.log(searchParams.get("r"));
+              if (searchParams.get("r") !== null)
+                navigate("/" + searchParams.get("r"));
+              else navigate("/congvanden");
+            }}
           >
             Trở về
           </Button>
@@ -193,15 +213,15 @@ function CongVanDenDetail() {
                   </tr>
                   <tr>
                     <th>Số tờ</th>
-                    <td colspan={2}>{form.soto}</td>
+                    <td colSpan={2}>{form.soto}</td>
                     <th>Nơi lưu</th>
-                    <td colspan={2}>{form.noiluu}</td>
+                    <td colSpan={2}>{form.noiluu}</td>
                   </tr>
                   <tr>
                     <th>Ngày đến</th>
-                    <td colspan={2}>{formatDate(form.ngayden)}</td>
+                    <td colSpan={2}>{formatDate(form.ngayden)}</td>
                     <th>Hạn giải quyết</th>
-                    <td colspan={2}>{formatDate(form.hangiaiquyet)}</td>
+                    <td colSpan={2}>{formatDate(form.hangiaiquyet)}</td>
                   </tr>
                   <tr>
                     <th>Ghi chú</th>
@@ -232,6 +252,17 @@ function CongVanDenDetail() {
           </Card>
         </Col>
       </Row>
+      {form.trangthai.ten === "chờ duyệt" && ma === form.cb_pheduyet.ma && (
+        <Row className="mt-3">
+          <Col md={12}>
+            <Card>
+              <CardBody>
+                <DuyetCongVanDuyet id={form._id} />
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      )}
       <Modal isOpen={preview} size="xl">
         <ModalHeader toggle={() => dispatch(setPreview(!preview))}>
           Xem công văn
