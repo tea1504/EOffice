@@ -6,6 +6,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +33,7 @@ import {
   resetForm,
   selectCVDiData,
 } from "./congVanDiSlice";
+import style from "./CongVanDi.module.css";
 
 const ActionButton = ({ data }) => {
   const MySwal = withReactContent(Swal);
@@ -151,7 +153,7 @@ function CongVanDi() {
       name: "Đơn vị nhận",
       selector: (row) => {
         return (
-          <div className="float-left w-100">
+          <div>
             {row.dv_nhan.map((el) => (
               <div key={el._id}>{el.ten}</div>
             ))}

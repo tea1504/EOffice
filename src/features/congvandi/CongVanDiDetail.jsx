@@ -18,6 +18,8 @@ import {
 import { selectLoginToken } from "../login/loginSlice";
 import CongVanPreview from "../congvan/CongVanPreview";
 import { getDetailDataAsync, selectCVDiForm } from "./congVanDiSlice";
+import clsx from "clsx";
+import style from "./CongVanDi.module.css";
 
 const XuLyItem = ({ data }) => {
   const formatDateTime = (ngay) => {
@@ -135,9 +137,14 @@ function CongVanDiDetail() {
                     <th>Đơn vị nhận</th>
                     <td colSpan={5}>
                       {
-                        <div className="float-left w-100">
+                        <div>
                           {form.dv_nhan.map((el) => (
-                            <div key={el._id}>{el.ten}</div>
+                            <div
+                              key={el._id}
+                              className={clsx(style.myBadge)}
+                            >
+                              {el.ten}
+                            </div>
                           ))}
                         </div>
                       }
