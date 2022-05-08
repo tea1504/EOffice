@@ -4,6 +4,9 @@ export default {
   get() {
     return Api().get('congvandi/full');
   },
+  getSimpleDetail(id) {
+    return Api().get('congvandi/' + id);
+  },
   getDetail(id) {
     return Api().get('congvandi/full/' + id);
   },

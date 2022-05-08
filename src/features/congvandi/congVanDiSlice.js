@@ -58,6 +58,18 @@ export const getDataAsync = createAsyncThunk(
   }
 )
 
+export const getSimpleDetailDataAsync = createAsyncThunk(
+  'congvandi/getsimpledata',
+  async (id) => {
+    try {
+      const response = await api.getSimpleDetail(id);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const getDetailDataAsync = createAsyncThunk(
   'congvandi/getdetaildata',
   async (id) => {
@@ -231,7 +243,7 @@ export const congVanDiSlice = createSlice({
         return year + "-" + month + "-" + dt;
       };
       state.form.ngay = formatdate(state.form.ngay);
-      state.form.ngaydi = formatdate(state.form.ngayden);
+      state.form.ngaydi = formatdate(state.form.ngaydi);
       state.form.hieuluc = formatdate(state.form.hieuluc);
       state.form.hantraloi = formatdate(state.form.hangiaiquyet);
     },
@@ -252,6 +264,17 @@ export const congVanDiSlice = createSlice({
           state.data = action.payload;
       })
       .addCase(getDetailDataAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else {
+          state.form = action.payload;
+        }
+      })
+      .addCase(getSimpleDetailDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }

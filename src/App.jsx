@@ -26,6 +26,7 @@ import CongVanDenEdit from "./features/congvanden/CongVanDenEdit";
 import CongVanDi from "./features/congvandi/CongVanDi";
 import CongVanDiCreate from "./features/congvandi/CongVanDiCreate";
 import CongVanDiDetail from "./features/congvandi/CongVanDiDetail";
+import CongVanDiEdit from "./features/congvandi/CongVanDiEdit";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ function App() {
             <Route path="congvandi">
               <Route path="" element={<CongVanDi />} />
               <Route path="them" element={<CongVanDiCreate />} />
-              <Route path="sua/:id" element={<CongVanDenEdit />} />
+              <Route path="sua/:id" element={<CongVanDiEdit />} />
               <Route path=":id" element={<CongVanDiDetail />} />
             </Route>
           </Route>
