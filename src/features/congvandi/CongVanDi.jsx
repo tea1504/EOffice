@@ -44,11 +44,13 @@ const ActionButton = ({ data }) => {
   const laLanhDao = useSelector(selectUserLanhDao);
 
   const handleXemButtonClick = () => {
-    navigate("./cong-van-den-so-" + data.so + "." + data._id);
+    navigate(
+      "./cong-van-den-so-" + data.so.replace("/", "-") + "." + data._id
+    );
   };
 
   const handleEditButtonClick = () => {
-    navigate("./sua/cong-van-den-so-" + data.so + "." + data._id);
+    navigate("./sua/cong-van-den-so-" + data.so.replace("/", "-") + "." + data._id);
   };
 
   const handleDeleteButtonClick = () => {
@@ -146,10 +148,18 @@ function CongVanDi() {
       maxWidth: "150px",
     },
     {
-      name: "Đơn vị phát hành",
-      selector: (row) => row.dv_phathanh?.ten,
+      name: "Đơn vị nhận",
+      selector: (row) => {
+        return (
+          <div className="float-left w-100">
+            {row.dv_nhan.map((el) => (
+              <div key={el._id}>{el.ten}</div>
+            ))}
+          </div>
+        );
+      },
       sortable: true,
-      maxWidth: '500px'
+      maxWidth: "500px",
     },
     {
       name: "Trạng thái",
@@ -158,10 +168,10 @@ function CongVanDi() {
       maxWidth: "150px",
     },
     {
-      name: "Ngày đến",
+      name: "Ngày đi",
       selector: (row) => {
         var options = { day: "2-digit", month: "2-digit", year: "numeric" };
-        var d = new Date(row.ngayden);
+        var d = new Date(row.ngaydi);
         return d.toLocaleDateString("vi-VN", options);
       },
       sortable: true,
@@ -171,7 +181,7 @@ function CongVanDi() {
       name: "Trích yếu",
       selector: (row) => row.trichyeu,
       sortable: true,
-      maxWidth: '500px'
+      maxWidth: "500px",
     },
     {
       cell: (row) => <ActionButton data={row} />,
@@ -187,7 +197,7 @@ function CongVanDi() {
   const filterItem = data.filter(
     (item) =>
       item.so.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.dv_phathanh.ten.toLowerCase().includes(filterText.toLowerCase()) ||
+      item.dv_nhan.ten.toLowerCase().includes(filterText.toLowerCase()) ||
       item.trangthai.ten.toLowerCase().includes(filterText.toLowerCase()) ||
       item.trichyeu.toLowerCase().includes(filterText.toLowerCase())
   );
@@ -241,8 +251,8 @@ function CongVanDi() {
               highlightOnHover
               conditionalRowStyles={conditionalRowStyles}
               customStyles={customStyles}
-              // columns={columns}
-              // data={filterItem}
+              columns={columns}
+              data={filterItem}
             />
           </Card>
         </Col>

@@ -44,11 +44,11 @@ const ActionButton = ({ data }) => {
   const laLanhDao = useSelector(selectUserLanhDao);
 
   const handleXemButtonClick = () => {
-    navigate("./cong-van-den-so-" + data.so + "." + data._id);
+    navigate("./cong-van-den-so-" + data.so.replace("/", "-") + "." + data._id);
   };
 
   const handleEditButtonClick = () => {
-    navigate("./sua/cong-van-den-so-" + data.so + "." + data._id);
+    navigate("./sua/cong-van-den-so-" + data.so.replace("/", "-") + "." + data._id);
   };
 
   const handleDeleteButtonClick = () => {
