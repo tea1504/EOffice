@@ -32,7 +32,7 @@ const XuLyItem = ({ data }) => {
     <Container fluid className="my-2">
       <Row>
         <Col sm={12} md={8}>
-          {data.canbo.ma} | {data.canbo.holot} {data.canbo.ten}
+          {data.canbo.ma} <br /> <b>{data.canbo.holot} {data.canbo.ten}</b>
         </Col>
         <Col sm={12} md={4}>
           <p style={{ fontSize: "10px" }} className="text-end">

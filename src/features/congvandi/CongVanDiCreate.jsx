@@ -52,9 +52,36 @@ import {
   getDataAsync as getTT,
   selectTTData,
 } from "../admin/trangthai/trangThaiSlice";
-import { createDataAsync, onChangeFormCBTrangThai, onChangeFormChucVuNguoiKy, onChangeFormDK, onChangeFormDM, onChangeFormDVNhan, onChangeFormGhiChu, onChangeFormHanTraLoi, onChangeFormHieuLuc, onChangeFormLCV, onChangeFormNgay, onChangeFormNgayDi, onChangeFormNGuoiKy, onChangeFormNoiLuu, onChangeFormSo, onChangeFormSoTo, onChangeFormTapTin, onChangeFormTrichYeu, resetForm, resetFormErr, selectCVDiForm } from "./congVanDiSlice"
+import {
+  createDataAsync,
+  onChangeFormCBTrangThai,
+  onChangeFormChucVuNguoiKy,
+  onChangeFormDK,
+  onChangeFormDM,
+  onChangeFormDVNhan,
+  onChangeFormEmailND,
+  onChangeFormEmailSend,
+  onChangeFormEmailTitle,
+  onChangeFormGhiChu,
+  onChangeFormHanTraLoi,
+  onChangeFormHieuLuc,
+  onChangeFormLCV,
+  onChangeFormNgay,
+  onChangeFormNgayDi,
+  onChangeFormNGuoiKy,
+  onChangeFormNoiLuu,
+  onChangeFormSo,
+  onChangeFormSoTo,
+  onChangeFormTapTin,
+  onChangeFormTrichYeu,
+  resetForm,
+  resetFormErr,
+  selectCVDiForm,
+} from "./congVanDiSlice";
 import withReactContent from "sweetalert2-react-content";
 import Swal from "sweetalert2";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 function CongVanDiCreate() {
   const MySwal = withReactContent(Swal);
@@ -115,27 +142,6 @@ function CongVanDiCreate() {
   useEffect(() => {
     if (tt.length > 0) dispatch(onChangeFormCBTrangThai(tt[0]._id));
   }, [tt]);
-
-  const renderTrangThai = () => {
-    return (
-      <FormGroup row>
-        {tt.map((el, ind) => {
-          return (
-            <Col key={"tt" + ind}>
-              <Input
-                type="radio"
-                name="tt"
-                id={"tt_" + el._id}
-                checked={form.trangthai === el._id}
-                onChange={() => dispatch(onChangeFormCBTrangThai(el._id))}
-              />{" "}
-              <Label for={"tt_" + el._id}>{el.ten}</Label>
-            </Col>
-          );
-        })}
-      </FormGroup>
-    );
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -199,6 +205,34 @@ function CongVanDiCreate() {
             </CardHeader>
             <CardBody style={{ height: "60vh", overflow: "auto" }}>
               <Form inline onSubmit={handleFormSubmit}>
+                {/* Chon file */}
+                <FormGroup>
+                  <Input
+                    type="file"
+                    multiple
+                    onChange={handleInputFileOnChange}
+                    invalid={form.errtaptin != null}
+                  />
+                  <FormFeedback>{form.errtaptin}</FormFeedback>
+                </FormGroup>
+                {/* Xem file */}
+                <FormGroup>
+                  <ReactSelect
+                    ref={refFile}
+                    options={listPDF}
+                    isClearable
+                    placeholder="Chọn file muốn xem..."
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refFile,
+                          value: "",
+                        };
+                        setpdf(null);
+                      } else setpdf(e.value);
+                    }}
+                  />
+                </FormGroup>
                 {/* so */}
                 <FormGroup>
                   <Label for="so">
@@ -604,47 +638,69 @@ function CongVanDiCreate() {
                     }
                   />
                 </FormGroup>
-                {/* trangthai */}
-                <FormGroup>
-                  <Label for="trangthai">
-                    Trạng thái
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="text-danger mx-1"
-                      id="tt"
-                    />
-                  </Label>
-                  {renderTrangThai()}
-                  <FormFeedback>{form.errtrangthai}</FormFeedback>
-                </FormGroup>
-                {/* Chon file */}
+                {/* Send email */}
                 <FormGroup>
                   <Input
-                    type="file"
-                    multiple
-                    onChange={handleInputFileOnChange}
-                    invalid={form.errtaptin != null}
-                  />
-                  <FormFeedback>{form.errtaptin}</FormFeedback>
+                    type="checkbox"
+                    id="sendemail"
+                    checked={form.email_send}
+                    onChange={() =>
+                      dispatch(onChangeFormEmailSend(!form.email_send))
+                    }
+                  />{" "}
+                  <Label check for="sendemail">
+                    {" "}
+                    Gửi email
+                  </Label>
                 </FormGroup>
-                {/* Xem file */}
-                <FormGroup>
-                  <ReactSelect
-                    ref={refFile}
-                    options={listPDF}
-                    isClearable
-                    placeholder="Chọn file muốn xem..."
-                    onChange={(e) => {
-                      if (!e) {
-                        e = {
-                          target: refFile,
-                          value: "",
-                        };
-                        setpdf(null);
-                      } else setpdf(e.value);
-                    }}
-                  />
-                </FormGroup>
+                {form.email_send && (
+                  <FormGroup>
+                    <Container fluid>
+                      <Row>
+                        <Col md={12}>
+                          <h3 className="text-center">Gửi mail thông báo</h3>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col md={12}>
+                          <Card className="shadow">
+                            <CardBody>
+                              <FormGroup className="row">
+                                <Label md={2}>Tiêu đề</Label>
+                                <Col md={10}>
+                                  <Input
+                                    value={form.email_title}
+                                    type="text"
+                                    placeholder="Tiêu đề email"
+                                    onChange={(e) =>
+                                      dispatch(
+                                        onChangeFormEmailTitle(e.target.value)
+                                      )
+                                    }
+                                  />
+                                </Col>
+                              </FormGroup>
+                              <FormGroup className="row">
+                                <Label md={2}>Nội dung</Label>
+                                <Col md={10}>
+                                  <CKEditor
+                                    editor={ClassicEditor}
+                                    data={form.email_nd}
+                                    onChange={(event, editor) => {
+                                      const data = editor.getData();
+                                      dispatch(onChangeFormEmailND(data));
+                                      console.log({ event, editor, data });
+                                    }}
+                                  />
+                                </Col>
+                              </FormGroup>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </FormGroup>
+                )}
                 <br />
                 <Button color="primary" className={clsx(style.absolute)}>
                   Lưu công văn

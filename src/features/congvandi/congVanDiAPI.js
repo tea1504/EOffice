@@ -24,9 +24,6 @@ export default {
         }
       }
     }
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
     return Api().post('congvandi', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'

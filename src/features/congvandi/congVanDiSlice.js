@@ -23,6 +23,9 @@ const initialState = {
     hantraloi: '',
     ngaydi: '',
     taptin: [],
+    email_nd: '',
+    email_title: '',
+    email_send: false,
     errso: null,
     errdv_nhan: null,
     errloaicongvan: null,
@@ -186,6 +189,15 @@ export const congVanDiSlice = createSlice({
     onChangeFormDVNhan: (state, action) => {
       state.form.dv_nhan = action.payload.map(el => el._id);
     },
+    onChangeFormEmailND: (state, action) => {
+      state.form.email_nd = action.payload;
+    },
+    onChangeFormEmailTitle: (state, action) => {
+      state.form.email_title = action.payload;
+    },
+    onChangeFormEmailSend: (state, action) => {
+      state.form.email_send = action.payload;
+    },
     resetFormErr: (state) => {
       state.form.errchucvu_nguoiky = null;
       state.form.errdokhan = null;
@@ -225,6 +237,9 @@ export const congVanDiSlice = createSlice({
       state.form.ngaydi = '';
       state.form.taptin = [];
       state.form.isSubmitted = false;
+      state.form.email_nd= '';
+      state.form.email_title= '';
+      state.form.email_send= false;
     },
     formatDate: (state) => {
       const formatdate = (ngay) => {
@@ -366,6 +381,6 @@ export const selectCVDiForm = state => state.cvdi.form;
 export const selectCVDiData = state => state.cvdi.data;
 export const selectCVDiErr = state => state.cvdi.err;
 
-export const { reset, onChangeFormSo, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDi, onChangeFormHanTraLoi, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, } = congVanDiSlice.actions;
+export const { reset, onChangeFormSo, onChangeFormDVNhan, setCBNhap, onChangeFormLCV, onChangeFormDK, onChangeFormDM, onChangeFormNgay, onChangeFormHieuLuc, onChangeFormTrichYeu, onChangeFormNGuoiKy, onChangeFormChucVuNguoiKy, onChangeFormSoTo, onChangeFormNoiLuu, onChangeFormGhiChu, onChangeFormNgayDi, onChangeFormHanTraLoi, onChangeFormTapTin, onChangeFormTrangThai, onChangeFormCBDuyet, onChangeFormCBTrangThai, resetFormErr, resetForm, resetTapTin, formatDate, onChangeFormEmailND, onChangeFormEmailTitle, onChangeFormEmailSend } = congVanDiSlice.actions;
 
 export default congVanDiSlice.reducer;

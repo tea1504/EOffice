@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^34.0.0",
+    "@ckeditor/ckeditor5-react": "^5.0.0",
     "@coreui/chartjs": "^3.0.0",
     "@coreui/coreui": "^4.1.2",
     "@coreui/icons": "^2.1.0",

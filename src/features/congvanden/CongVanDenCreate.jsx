@@ -24,6 +24,7 @@ import {
   ModalBody,
   ModalHeader,
   Row,
+  Table,
   Tooltip,
 } from "reactstrap";
 import Swal from "sweetalert2";
@@ -218,7 +219,13 @@ function CongVanDenCreate() {
           <h2>Thêm công văn đến</h2>
         </Col>
         <Col md={4} className="mb-2 text-end">
-          <Button color="primary" className="shadow" onClick={() => navigate("/congvanden")}>Trở về</Button>
+          <Button
+            color="primary"
+            className="shadow"
+            onClick={() => navigate("/congvanden")}
+          >
+            Trở về
+          </Button>
         </Col>
       </Row>
       <Row>
@@ -241,6 +248,34 @@ function CongVanDenCreate() {
             </CardHeader>
             <CardBody style={{ height: "60vh", overflow: "auto" }}>
               <Form inline onSubmit={handleFormSubmit}>
+                {/* Chon file */}
+                <FormGroup>
+                  <Input
+                    type="file"
+                    multiple
+                    onChange={handleInputFileOnChange}
+                    invalid={form.errtaptin != null}
+                  />
+                  <FormFeedback>{form.errtaptin}</FormFeedback>
+                </FormGroup>
+                {/* Xem file */}
+                <FormGroup>
+                  <ReactSelect
+                    ref={refFile}
+                    options={listPDF}
+                    isClearable
+                    placeholder="Chọn file muốn xem..."
+                    onChange={(e) => {
+                      if (!e) {
+                        e = {
+                          target: refFile,
+                          value: "",
+                        };
+                        setpdf(null);
+                      } else setpdf(e.value);
+                    }}
+                  />
+                </FormGroup>
                 {/* so */}
                 <FormGroup>
                   <Label for="so">
@@ -682,34 +717,6 @@ function CongVanDenCreate() {
                         dispatch(onChangeFormCBDuyet(e._id));
                       }
                       dispatch(onChangeFormCBDuyet(e._id));
-                    }}
-                  />
-                </FormGroup>
-                {/* Chon file */}
-                <FormGroup>
-                  <Input
-                    type="file"
-                    multiple
-                    onChange={handleInputFileOnChange}
-                    invalid={form.errtaptin != null}
-                  />
-                  <FormFeedback>{form.errtaptin}</FormFeedback>
-                </FormGroup>
-                {/* Xem file */}
-                <FormGroup>
-                  <ReactSelect
-                    ref={refFile}
-                    options={listPDF}
-                    isClearable
-                    placeholder="Chọn file muốn xem..."
-                    onChange={(e) => {
-                      if (!e) {
-                        e = {
-                          target: refFile,
-                          value: "",
-                        };
-                        setpdf(null);
-                      } else setpdf(e.value);
                     }}
                   />
                 </FormGroup>
