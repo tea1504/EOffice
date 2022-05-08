@@ -76,7 +76,6 @@ import {
   getDataAsync as getTT,
   selectTTData,
 } from "../admin/trangthai/trangThaiSlice";
-import { getDataLanhDaoAsync, selectCBData } from "../admin/canbo/canBoSlice";
 import DonViBenNgoaiCreate from "../admin/donvi/DonViBenNgoaiCreate";
 import clsx from "clsx";
 import style from "./CongVanDi.module.css";
@@ -99,13 +98,11 @@ function CongVanDiEdit() {
   const dm = useSelector(selectDMData);
   const dk = useSelector(selectDKData);
   const tt = useSelector(selectTTData);
-  const cbld = useSelector(selectCBData);
   const addDV = useSelector(selectDVAdd);
   const refDVNhan = useRef(null);
   const refLCV = useRef(null);
   const refDM = useRef(null);
   const refDK = useRef(null);
-  const refCBPD = useRef(null);
   const refFile = useRef(null);
   const navigate = useNavigate();
 
@@ -147,7 +144,6 @@ function CongVanDiEdit() {
     dispatch(getDM());
     dispatch(getDK());
     dispatch(getTT());
-    dispatch(getDataLanhDaoAsync());
     dispatch(resetForm());
     dispatch(getSimpleDetailDataAsync(_id));
   }, []);
@@ -161,7 +157,6 @@ function CongVanDiEdit() {
     refLCV.current.setValue(lcv.filter((el) => el._id === form.loaicongvan)[0]);
     refDM.current.setValue(dm.filter((el) => el._id === form.domat)[0]);
     refDK.current.setValue(dk.filter((el) => el._id === form.dokhan)[0]);
-    refCBPD.current.setValue(cbld.filter((el) => el._id === form.cb_pheduyet)[0]);
   }, [form._id]);
 
   useEffect(() => {
@@ -663,45 +658,6 @@ function CongVanDiEdit() {
                     onChange={(e) =>
                       dispatch(onChangeFormHanTraLoi(e.target.value))
                     }
-                  />
-                </FormGroup>
-                {/* trangthai */}
-                <FormGroup>
-                  <Label for="trangthai">
-                    Trạng thái
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="text-danger mx-1"
-                      id="tt"
-                    />
-                  </Label>
-                  {renderTrangThai()}
-                  <FormFeedback>{form.errtrangthai}</FormFeedback>
-                </FormGroup>
-                {/* CBDuyet */}
-                <FormGroup>
-                  <Label for="cb_pheduyet">Chọn cán bộ duyệt</Label>
-                  <ReactSelect
-                    ref={refCBPD}
-                    options={cbld}
-                    getOptionLabel={(option) =>
-                      option.ma + " | " + option.holot + " " + option.ten
-                    }
-                    isClearable
-                    getOptionValue={(option) => option._id}
-                    id="cb_pheduyet"
-                    name="cb_pheduyet"
-                    placeholder="Chọn cán bộ phê duyệt..."
-                    onChange={(e) => {
-                      if (!e) {
-                        e = {
-                          target: refCBPD,
-                          value: "",
-                        };
-                        dispatch(onChangeFormCBDuyet(e._id));
-                      }
-                      dispatch(onChangeFormCBDuyet(e._id));
-                    }}
                   />
                 </FormGroup>
                 {/* Chon file */}

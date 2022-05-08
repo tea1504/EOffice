@@ -129,13 +129,13 @@ function CongVanDiDetail() {
                 <tbody>
                   <tr>
                     <th>Số công văn</th>
-                    <td colSpan={2}>{form.so}</td>
+                    <td>{form.so}</td>
                     <th>Loại công văn</th>
-                    <td colSpan={2}>{form.loaicongvan?.ten}</td>
+                    <td>{form.loaicongvan?.ten}</td>
                   </tr>
                   <tr>
                     <th>Đơn vị nhận</th>
-                    <td colSpan={5}>
+                    <td colSpan={3}>
                       {
                         <div>
                           {form.dv_nhan.map((el) => (
@@ -152,7 +152,7 @@ function CongVanDiDetail() {
                   </tr>
                   <tr>
                     <th>Cán bộ nhập</th>
-                    <td colSpan={5}>
+                    <td colSpan={3}>
                       {form.cb_nhap?.ma +
                         " | " +
                         form.cb_nhap?.holot +
@@ -162,7 +162,7 @@ function CongVanDiDetail() {
                   </tr>
                   <tr>
                     <th>Cán bộ phê duyệt</th>
-                    <td colSpan={5}>
+                    <td colSpan={3}>
                       {form.cb_pheduyet
                         ? form.cb_pheduyet.ma +
                           " | " +
@@ -174,7 +174,7 @@ function CongVanDiDetail() {
                   </tr>
                   <tr>
                     <th>Cán bộ xử lý</th>
-                    <td colSpan={5}>
+                    <td colSpan={3}>
                       {form.cb_xuly
                         ? form.cb_xuly.ma +
                           " | " +
@@ -185,48 +185,46 @@ function CongVanDiDetail() {
                     </td>
                   </tr>
                   <tr>
-                    <th width="15%">Trạng thái</th>
-                    <td width="18%">{form.trangthai?.ten}</td>
-                    <th width="15%">Độ mật</th>
-                    <td width="18%">{form.domat?.ten}</td>
-                    <th width="15%">Độ khẩn</th>
+                    <th width="20%">Độ mật</th>
+                    <td width="25%">{form.domat?.ten}</td>
+                    <th width="20%">Độ khẩn</th>
                     <td>{form.dokhan?.ten}</td>
                   </tr>
                   <tr>
                     <th>Ngày</th>
-                    <td colSpan={2}>{formatDate(form.ngay)}</td>
+                    <td>{formatDate(form.ngay)}</td>
                     <th>Hiệu lực</th>
-                    <td colSpan={2}>{formatDate(form.hieuluc)}</td>
+                    <td>{formatDate(form.hieuluc)}</td>
                   </tr>
                   <tr>
                     <th>Trích yếu</th>
-                    <td colSpan={5}>{form.trichyeu}</td>
+                    <td colSpan={3}>{form.trichyeu}</td>
                   </tr>
                   <tr>
                     <th>Người ký</th>
-                    <td colSpan={2}>{form.nguoiky}</td>
+                    <td>{form.nguoiky}</td>
                     <th>Chức vụ người ký</th>
-                    <td colSpan={2}>{form.chucvu_nguoiky}</td>
+                    <td>{form.chucvu_nguoiky}</td>
                   </tr>
                   <tr>
                     <th>Số tờ</th>
-                    <td colspan={2}>{form.soto}</td>
+                    <td>{form.soto}</td>
                     <th>Nơi lưu</th>
-                    <td colspan={2}>{form.noiluu}</td>
+                    <td>{form.noiluu}</td>
                   </tr>
                   <tr>
                     <th>Ngày đi</th>
-                    <td colspan={2}>{formatDate(form.ngaydi)}</td>
+                    <td>{formatDate(form.ngaydi)}</td>
                     <th>Hạn trả lời</th>
-                    <td colspan={2}>{formatDate(form.hantraloi)}</td>
+                    <td>{formatDate(form.hantraloi)}</td>
                   </tr>
                   <tr>
                     <th>Ghi chú</th>
-                    <td colSpan={5}>{form.ghichu}</td>
+                    <td colSpan={3}>{form.ghichu}</td>
                   </tr>
                   <tr>
                     <th>Tập tin</th>
-                    <td colSpan={5}>{renderTapTin()}</td>
+                    <td colSpan={3}>{renderTapTin()}</td>
                   </tr>
                 </tbody>
               </Table>

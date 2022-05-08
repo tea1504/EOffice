@@ -164,12 +164,6 @@ function CongVanDi() {
       maxWidth: "500px",
     },
     {
-      name: "Trạng thái",
-      selector: (row) => row.trangthai.ten,
-      sortable: true,
-      maxWidth: "150px",
-    },
-    {
       name: "Ngày đi",
       selector: (row) => {
         var options = { day: "2-digit", month: "2-digit", year: "numeric" };
