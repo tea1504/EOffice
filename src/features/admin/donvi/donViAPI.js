@@ -11,6 +11,7 @@ export default {
     return Api().post('donvi', form);
   },
   postOther(form) {
+    console.log(form);
     return Api().post('donvi/other', form);
   },
   put(id, form) {
