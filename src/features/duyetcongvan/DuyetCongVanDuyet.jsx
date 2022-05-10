@@ -9,7 +9,15 @@ import {
   getDuLieuTheoUserAsync,
   selectCBData,
 } from "../admin/canbo/canBoSlice";
-import { duyetCVAsync, getDetailDataAsync, onChangeFormCBXuLy, onChangeFormYKien, selectCVDForm, setIsSubmited } from "../congvanden/congVanDenSlice";
+import {
+  duyetCVAsync,
+  getDetailDataAsync,
+  khongDuyetCVAsync,
+  onChangeFormCBXuLy,
+  onChangeFormYKien,
+  selectCVDForm,
+  setIsSubmited,
+} from "../congvanden/congVanDenSlice";
 
 function DuyetCongVanDuyet({ id }) {
   const MySwal = withReactContent(Swal);
@@ -25,7 +33,21 @@ function DuyetCongVanDuyet({ id }) {
   const handleOnClickButtonDuyet = (e) => {
     e.preventDefault();
     dispatch(duyetCVAsync(form));
-  }
+  };
+
+  const handleOnClickButtonKhongDuyet = (e) => {
+    e.preventDefault();
+    console.log(e);
+    if (form.ykien == null || form.ykien == "")
+      MySwal.fire({
+        title: <h1>Bạn phải nhập ý kiến</h1>,
+        icon: "warning",
+        footer: "EOffice &copy; 2022",
+      }).then(() => {});
+    else {
+      dispatch(khongDuyetCVAsync(form));
+    }
+  };
 
   useEffect(() => {
     if (form.isSubmitted)
@@ -70,17 +92,29 @@ function DuyetCongVanDuyet({ id }) {
           Ý kiến
         </Label>
         <Col md={10}>
-          <Input value={form.ykien} type="textarea" onChange={e=>dispatch(onChangeFormYKien(e.target.value))} />
+          <Input
+            value={form.ykien}
+            type="textarea"
+            onChange={(e) => dispatch(onChangeFormYKien(e.target.value))}
+          />
         </Col>
       </FormGroup>
       <FormGroup row>
         <Col md={6}>
-          <Button color="danger" className="w-100">
+          <Button
+            color="danger"
+            className="w-100"
+            onClick={handleOnClickButtonKhongDuyet}
+          >
             Không duyệt
           </Button>
         </Col>
         <Col md={6}>
-          <Button color="primary" className="w-100" onClick={handleOnClickButtonDuyet}>
+          <Button
+            color="primary"
+            className="w-100"
+            onClick={handleOnClickButtonDuyet}
+          >
             Duyệt
           </Button>
         </Col>

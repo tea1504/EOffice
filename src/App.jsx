@@ -28,6 +28,10 @@ import CongVanDiCreate from "./features/congvandi/CongVanDiCreate";
 import CongVanDiDetail from "./features/congvandi/CongVanDiDetail";
 import CongVanDiEdit from "./features/congvandi/CongVanDiEdit";
 import DuyetCongVan from "./features/duyetcongvan/DuyetCongVan";
+import ProtectedLDRoute from "./components/ProtectedLDRoutes";
+import ProtectedLDVTRoute from "./components/ProtectedLDVTRoutes";
+import ProtectedVTRoute from "./components/ProtectedVTRoutes";
+import CongVanTuChoi from "./features/congvantuchoi/CongVanTuChoi";
 
 function App() {
   const dispatch = useDispatch();
@@ -75,8 +79,13 @@ function App() {
               <Route path="sua/:id" element={<CongVanDiEdit />} />
               <Route path=":id" element={<CongVanDiDetail />} />
             </Route>
-            <Route path="duyetcongvan">
-              <Route path="" element={<DuyetCongVan />} />
+            <Route element={<ProtectedLDVTRoute />}>
+              <Route path="duyetcongvan">
+                <Route path="" element={<DuyetCongVan />} />
+              </Route>
+              <Route path="congvantuchoi">
+                <Route path="" element={<CongVanTuChoi />} />
+              </Route>
             </Route>
           </Route>
           <Route path="*" element={<Page404 />} />

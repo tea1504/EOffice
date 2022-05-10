@@ -75,6 +75,18 @@ export const getDuLieuChuaDuyetAsync = createAsyncThunk(
   }
 )
 
+export const getDuLieuTuChoiAsync = createAsyncThunk(
+  'congvanden/getdulieutuchoi',
+  async () => {
+    try {
+      const response = await api.getdulieutuchoi();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const getDetailDataAsync = createAsyncThunk(
   'congvanden/getdetaildata',
   async (id) => {
@@ -116,6 +128,18 @@ export const duyetCVAsync = createAsyncThunk(
   async (form) => {
     try {
       const response = await api.duyetCV(form._id, form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const khongDuyetCVAsync = createAsyncThunk(
+  'congvanden/khongduyetCV',
+  async (form) => {
+    try {
+      const response = await api.khongduyetCV(form._id, form);
       return response.data;
     } catch (error) {
       return error.response;
@@ -296,6 +320,16 @@ export const congVanDenSlice = createSlice({
         else
           state.data = action.payload;
       })
+      .addCase(getDuLieuTuChoiAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
       .addCase(getDetailDataAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
@@ -308,6 +342,17 @@ export const congVanDenSlice = createSlice({
         }
       })
       .addCase(duyetCVAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else {
+          state.form.isSubmitted = true;
+        }
+      })
+      .addCase(khongDuyetCVAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }

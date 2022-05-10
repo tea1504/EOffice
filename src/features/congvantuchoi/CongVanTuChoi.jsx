@@ -1,7 +1,4 @@
-import {
-  faEye,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -22,7 +19,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { customStyles, paginationConfig } from "../../app/datatableConfig";
 import {
+  deleteDataAsync,
+  getDataAsync,
   getDuLieuChuaDuyetAsync,
+  getDuLieuTuChoiAsync,
   resetForm,
   selectCVDData,
 } from "../congvanden/congVanDenSlice";
@@ -30,9 +30,45 @@ import {
 const ActionButton = ({ data }) => {
   const [tooltipXem, setTooltipXem] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [tooltipDel, setTooltipDel] = useState(false);
 
   const handleXemButtonClick = () => {
-    navigate("/congvanden/cong-van-den-so-" + data.so.replace("/", "-") + "." + data._id + "?r=duyetcongvan");
+    navigate(
+      "/congvanden/cong-van-den-so-" +
+        data.so.replace("/", "-") +
+        "." +
+        data._id +
+        "?r=congvantuchoi"
+    );
+  };
+
+  const handleDeleteButtonClick = () => {
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Dữ liệu sẽ không thể phục hồi lại sau khi xóa.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng, vẫn xóa!",
+      cancelButtonText: "Không, hủy xóa!",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteDataAsync(data._id));
+        dispatch(getDataAsync());
+        MySwal.fire(
+          "Đã xóa!",
+          `Đã xóa công văn số ${data.so} khỏi hệ thống`,
+          "success"
+        );
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        MySwal.fire("Đã hủy", "Đã hủy thao tác xóa");
+      }
+    });
   };
 
   return (
@@ -51,11 +87,25 @@ const ActionButton = ({ data }) => {
       >
         Xem chi tiết
       </Tooltip>
+      <Button
+        className="btn-neutral mx-1"
+        id="btnDel"
+        onClick={() => handleDeleteButtonClick(data)}
+      >
+        <FontAwesomeIcon icon={faTrash} className="text-danger" />
+      </Button>
+      <Tooltip
+        target="btnDel"
+        isOpen={tooltipDel}
+        toggle={() => setTooltipDel(!tooltipDel)}
+      >
+        Xóa
+      </Tooltip>
     </>
   );
 };
 
-function DuyetCongVan() {
+function CongVanTuChoi() {
   const MySwal = withReactContent(Swal);
   const columns = [
     {
@@ -73,6 +123,12 @@ function DuyetCongVan() {
     {
       name: "Đơn vị phát hành",
       selector: (row) => row.dv_phathanh?.ten,
+      sortable: true,
+      maxWidth: "500px",
+    },
+    {
+      name: "Ý kiến",
+      selector: (row) => row.ykien,
       sortable: true,
       maxWidth: "500px",
     },
@@ -113,16 +169,16 @@ function DuyetCongVan() {
   };
 
   useEffect(() => {
-    document.title = "E-Office | Duyệt công văn"
+    document.title = "E-Office | Công văn bị từ chối";
     dispatch(resetForm());
-    dispatch(getDuLieuChuaDuyetAsync());
+    dispatch(getDuLieuTuChoiAsync());
   }, []);
 
   return (
     <Container fluid className="my-3 px-5">
       <Row className="mb-3">
         <Col md={12} className="mb-2">
-          <h2>Công văn cần duyệt</h2>
+          <h2>Công văn cần xóa</h2>
         </Col>
         <Col md={6}>
           <InputGroup>
@@ -158,4 +214,4 @@ function DuyetCongVan() {
   );
 }
 
-export default DuyetCongVan;
+export default CongVanTuChoi;

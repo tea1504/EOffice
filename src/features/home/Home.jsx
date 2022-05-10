@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { MyFooter } from "../../pages/layouts/MyFooter";
@@ -8,6 +9,10 @@ import { selectSidebar } from "../common/commonSlide";
 
 function Home() {
   const sidebar = useSelector(selectSidebar);
+
+  useEffect(()=>{
+    document.title = "E-Office"
+  },[]);
 
   return (
     <>

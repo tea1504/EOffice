@@ -7,6 +7,7 @@ import {
   faFileArrowDown,
   faFileArrowUp,
   faPersonRunning,
+  faTimesSquare,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +32,9 @@ export const MySidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="sidebar-brand d-none d-md-flex">EOffice | Văn phòng điện tử</div>
+      <div className="sidebar-brand d-none d-md-flex">
+        EOffice | Văn phòng điện tử
+      </div>
       <ul className="sidebar-nav">
         <div className="simplebar-wrapper">
           <div className="simplebar-mark">
@@ -64,7 +67,10 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon text-secondary" icon={faBook} />
+                        <FontAwesomeIcon
+                          className="nav-icon text-secondary"
+                          icon={faBook}
+                        />
                         Loại công văn
                       </NavLink>
                     </li>
@@ -95,7 +101,10 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon text-danger" icon={faBan} />
+                        <FontAwesomeIcon
+                          className="nav-icon text-danger"
+                          icon={faBan}
+                        />
                         Độ mật
                       </NavLink>
                     </li>
@@ -126,12 +135,15 @@ export const MySidebar = () => {
                           isActive ? activeStyle : undefined
                         }
                       >
-                        <FontAwesomeIcon className="nav-icon text-info" icon={faUser} />
+                        <FontAwesomeIcon
+                          className="nav-icon text-info"
+                          icon={faUser}
+                        />
                         Cán bộ
                       </NavLink>
                     </li>
                   )}
-                  {(
+                  {
                     <li className="nav-item">
                       <NavLink
                         className="nav-link"
@@ -147,8 +159,8 @@ export const MySidebar = () => {
                         Công văn đến
                       </NavLink>
                     </li>
-                  )}
-                  {(
+                  }
+                  {
                     <li className="nav-item">
                       <NavLink
                         className="nav-link"
@@ -164,8 +176,8 @@ export const MySidebar = () => {
                         Công văn đi
                       </NavLink>
                     </li>
-                  )}
-                  {lanhdao && (
+                  }
+                  {(lanhdao || vanthu) && (
                     <li className="nav-item">
                       <NavLink
                         className="nav-link"
@@ -179,6 +191,23 @@ export const MySidebar = () => {
                           icon={faCheckSquare}
                         />
                         Duyệt công văn
+                      </NavLink>
+                    </li>
+                  )}
+                  {(lanhdao || vanthu) && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/congvantuchoi"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon text-danger"
+                          icon={faTimesSquare}
+                        />
+                        Công văn bị từ chối
                       </NavLink>
                     </li>
                   )}
