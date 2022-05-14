@@ -6,6 +6,7 @@ import {
   faDashboard,
   faFileArrowDown,
   faFileArrowUp,
+  faHandsHolding,
   faPersonRunning,
   faTimesSquare,
   faUser,
@@ -208,6 +209,23 @@ export const MySidebar = () => {
                           icon={faTimesSquare}
                         />
                         Công văn bị từ chối
+                      </NavLink>
+                    </li>
+                  )}
+                  {(
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link"
+                        to="/xulycongvan"
+                        style={({ isActive }) =>
+                          isActive ? activeStyle : undefined
+                        }
+                      >
+                        <FontAwesomeIcon
+                          className="nav-icon text-secondary"
+                          icon={faHandsHolding}
+                        />
+                        Xử lý công văn
                       </NavLink>
                     </li>
                   )}

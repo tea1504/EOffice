@@ -87,6 +87,18 @@ export const getDuLieuTuChoiAsync = createAsyncThunk(
   }
 )
 
+export const getDuLieuXuLyAsync = createAsyncThunk(
+  'congvanden/getdulieuxuly',
+  async () => {
+    try {
+      const response = await api.getdulieuxuly();
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
 export const getDetailDataAsync = createAsyncThunk(
   'congvanden/getdetaildata',
   async (id) => {
@@ -140,6 +152,18 @@ export const khongDuyetCVAsync = createAsyncThunk(
   async (form) => {
     try {
       const response = await api.khongduyetCV(form._id, form);
+      return response.data;
+    } catch (error) {
+      return error.response;
+    }
+  }
+)
+
+export const xuLyCVAsync = createAsyncThunk(
+  'congvanden/xulyCV',
+  async (id) => {
+    try {
+      const response = await api.xulyCV(id);
       return response.data;
     } catch (error) {
       return error.response;
@@ -321,6 +345,16 @@ export const congVanDenSlice = createSlice({
           state.data = action.payload;
       })
       .addCase(getDuLieuTuChoiAsync.fulfilled, (state, action) => {
+        if (action.payload.status) {
+          if (action.payload.status === 404)
+            state.err = { status: 404, data: "Lỗi không tìm thấy server" }
+          else
+            state.err = { status: 500, data: "Lỗi server" }
+        }
+        else
+          state.data = action.payload;
+      })
+      .addCase(getDuLieuXuLyAsync.fulfilled, (state, action) => {
         if (action.payload.status) {
           if (action.payload.status === 404)
             state.err = { status: 404, data: "Lỗi không tìm thấy server" }

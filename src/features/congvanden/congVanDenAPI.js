@@ -10,6 +10,9 @@ export default {
   getdulieutuchoi() {
     return Api().get('congvanden/getdulieutuchoi');
   },
+  getdulieuxuly() {
+    return Api().get('congvanden/getdulieuxuly');
+  },
   getDetail(id) {
     return Api().get('congvanden/full/' + id);
   },
@@ -67,6 +70,12 @@ export default {
     var formData = new FormData();
     formData.append('ykien', form.ykien);
     return Api().put('congvanden/khongduyet/' + id, formData);
+  },
+  delete(id) {
+    return Api().delete('congvanden/' + id);
+  },
+  xulyCV(id) {
+    return Api().put('congvanden/xulyCV/' + id);
   },
   delete(id) {
     return Api().delete('congvanden/' + id);

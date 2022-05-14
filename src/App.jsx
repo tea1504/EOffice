@@ -32,6 +32,7 @@ import ProtectedLDRoute from "./components/ProtectedLDRoutes";
 import ProtectedLDVTRoute from "./components/ProtectedLDVTRoutes";
 import ProtectedVTRoute from "./components/ProtectedVTRoutes";
 import CongVanTuChoi from "./features/congvantuchoi/CongVanTuChoi";
+import XuLyCongVan from "./features/xulycongvan/XuLyCongVan";
 
 function App() {
   const dispatch = useDispatch();
@@ -78,6 +79,9 @@ function App() {
               <Route path="them" element={<CongVanDiCreate />} />
               <Route path="sua/:id" element={<CongVanDiEdit />} />
               <Route path=":id" element={<CongVanDiDetail />} />
+            </Route>
+            <Route path="xulycongvan">
+              <Route path="" element={<XuLyCongVan />} />
             </Route>
             <Route element={<ProtectedLDVTRoute />}>
               <Route path="duyetcongvan">
