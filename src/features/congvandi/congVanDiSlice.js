@@ -187,6 +187,7 @@ export const congVanDiSlice = createSlice({
       state.form.trangthai = action.payload;
     },
     onChangeFormDVNhan: (state, action) => {
+      console.log(action.payload);
       state.form.dv_nhan = action.payload.map(el => el._id);
     },
     onChangeFormEmailND: (state, action) => {
@@ -355,6 +356,12 @@ export const congVanDiSlice = createSlice({
             state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
             state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
             state.form.errngaydi = action.payload.data.errors.ngaydi?.message;
+          }
+          else if (action.payload.data.kind) {
+            if (action.payload.data.path == "loaicongvan")
+              state.form.errloaicongvan = "Bạn phải chọn loại công văn";
+            if (action.payload.data.path == "dv_phathanh")
+            state.form.errdv_nhan = "Bạn phải chọn đơn vị nhận";
           }
           else
             state.err = {

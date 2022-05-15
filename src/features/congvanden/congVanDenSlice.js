@@ -430,6 +430,7 @@ export const congVanDenSlice = createSlice({
           state.form.isSubmitted = true;
       })
       .addCase(editDataAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
         if (action.payload.status) {
           if (action.payload.data.code) {
             //Lỗi unique
@@ -451,6 +452,12 @@ export const congVanDenSlice = createSlice({
             state.form.errtrangthai = action.payload.data.errors.trangthai ? "Bạn phải chọn trạng thái" : null;
             state.form.errtrichyeu = action.payload.data.errors.trichyeu?.message;
             state.form.errngayden = action.payload.data.errors.ngayden?.message;
+          }
+          else if (action.payload.data.kind) {
+            if (action.payload.data.path == "loaicongvan")
+              state.form.errloaicongvan = "Bạn phải chọn loại công văn";
+            if (action.payload.data.path == "dv_phathanh")
+            state.form.errdv_phathanh = "Bạn phải chọn đơn vị phát hành";
           }
           else
             state.err = {

@@ -68,7 +68,7 @@ export const MyHeader = () => {
               </NavLink>
             </li>
           )}
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a className="nav-link" href="#">
               Users
             </a>
@@ -77,10 +77,10 @@ export const MyHeader = () => {
             <a className="nav-link" href="#">
               Settings
             </a>
-          </li>
+          </li> */}
         </ul>
         <ul className="header-nav ms-auto">
-          <li className="nav-item">
+          {/* <li className="nav-item">
             <a className="nav-link" href="#">
               <FontAwesomeIcon icon={faBars} />
             </a>
@@ -89,7 +89,7 @@ export const MyHeader = () => {
             <a className="nav-link" href="#">
               <FontAwesomeIcon icon={faBars} />
             </a>
-          </li>
+          </li> */}
           <li className="nav-item" id="TooltipExample">
             <div
               className="nav-link"

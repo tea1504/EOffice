@@ -193,8 +193,6 @@ function CongVanDi() {
   const filterItem = data.filter(
     (item) =>
       item.so.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.dv_nhan.ten.toLowerCase().includes(filterText.toLowerCase()) ||
-      item.trangthai.ten.toLowerCase().includes(filterText.toLowerCase()) ||
       item.trichyeu.toLowerCase().includes(filterText.toLowerCase())
   );
   const handleClear = () => {
